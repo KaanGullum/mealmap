@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MealMap Food-Forward Logo Concepts</title>
+  <style>
+    :root {
+      --bg: #f6f0e8;
+      --ink: #1d2329;
+      --muted: #64707b;
+      --card: rgba(255, 255, 255, 0.76);
+      --border: rgba(29, 35, 41, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Avenir Next", "SF Pro Display", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(243, 179, 61, 0.18), transparent 30%),
+        radial-gradient(circle at top right, rgba(31, 110, 87, 0.16), transparent 28%),
+        var(--bg);
+    }
+    main {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 56px 24px 80px;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      line-height: 1;
+    }
+    .lede {
+      max-width: 760px;
+      margin: 0 0 36px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      padding: 20px;
+      border-radius: 28px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 18px 40px rgba(24, 32, 40, 0.08);
+    }
+    .card img {
+      width: 100%;
+      display: block;
+      border-radius: 22px;
+      background: white;
+    }
+    h2 {
+      margin: 16px 0 8px;
+      font-size: 1.1rem;
+    }
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>MealMap Food-Forward Concepts</h1>
+    <p class="lede">
+      This round leans much harder into food cues: plate, fork, bowl, steam, and serving cloche. Each one still keeps a hint of map or discovery language so the brand remains tied to planning and guidance.
+    </p>
+    <section class="grid">
+      <article class="card">
+        <img src="./mealmap-logo-concept-5-food-pin.svg" alt="MealMap logo concept 5" />
+        <h2>5. Food Pin</h2>
+        <p>The strongest literal option. It reads as location plus plated meal almost immediately.</p>
+      </article>
+      <article class="card">
+        <img src="./mealmap-logo-concept-6-bowl-route.svg" alt="MealMap logo concept 6" />
+        <h2>6. Bowl Route</h2>
+        <p>Feels more modern and app-like, with a bowl as the hero and route-inspired steam above it.</p>
+      </article>
+      <article class="card">
+        <img src="./mealmap-logo-concept-7-cloche-pin.svg" alt="MealMap logo concept 7" />
+        <h2>7. Cloche Pin</h2>
+        <p>More premium and hospitality-driven. Good if MealMap should feel curated and meal-service adjacent.</p>
+      </article>
+      <article class="card">
+        <img src="./mealmap-logo-concept-8-plate-route-fork.svg" alt="MealMap logo concept 8" />
+        <h2>8. Plate Route Fork</h2>
+        <p>A softer plate-first symbol with route detail inside. More balanced between food and planning.</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

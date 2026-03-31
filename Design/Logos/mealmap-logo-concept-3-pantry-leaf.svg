@@ -1,0 +1,22 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg3" x1="160" y1="110" x2="880" y2="910" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F3E9D3"/>
+      <stop offset="1" stop-color="#D4B483"/>
+    </linearGradient>
+    <linearGradient id="leaf3" x1="420" y1="268" x2="646" y2="520" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3E9D63"/>
+      <stop offset="1" stop-color="#1F6E46"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="232" fill="url(#bg3)"/>
+  <rect x="246" y="246" width="532" height="532" rx="90" fill="#FFF8EC"/>
+  <rect x="322" y="320" width="380" height="62" rx="31" fill="#D4B483"/>
+  <rect x="322" y="448" width="164" height="190" rx="40" fill="#E8D4AE"/>
+  <rect x="538" y="448" width="164" height="190" rx="40" fill="#E8D4AE"/>
+  <path d="M514 526C448 526 394 472 394 406C460 406 514 460 514 526Z" fill="url(#leaf3)"/>
+  <path d="M510 526C510 452 568 392 642 392C642 466 584 526 510 526Z" fill="#65B77C"/>
+  <path d="M510 456V612" stroke="#1F6E46" stroke-width="30" stroke-linecap="round"/>
+  <path d="M398 702H626" stroke="#0F5A46" stroke-width="42" stroke-linecap="round"/>
+  <path d="M360 702C360 626 420 566 496 566H528C604 566 664 626 664 702" stroke="#0F5A46" stroke-width="42" stroke-linecap="round"/>
+</svg>

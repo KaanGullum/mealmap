@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MealMap Logo Concepts</title>
+  <style>
+    :root {
+      --bg: #f4efe7;
+      --ink: #182028;
+      --muted: #5f6a75;
+      --card: rgba(255, 255, 255, 0.72);
+      --border: rgba(24, 32, 40, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Avenir Next", "SF Pro Display", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(255, 127, 80, 0.18), transparent 30%),
+        radial-gradient(circle at top right, rgba(15, 143, 120, 0.14), transparent 28%),
+        var(--bg);
+    }
+
+    main {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 56px 24px 80px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      line-height: 1;
+    }
+
+    .lede {
+      max-width: 760px;
+      margin: 0 0 36px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 28px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 18px 40px rgba(24, 32, 40, 0.08);
+    }
+
+    .card img {
+      width: 100%;
+      display: block;
+      border-radius: 22px;
+      background: white;
+    }
+
+    h2 {
+      margin: 16px 0 8px;
+      font-size: 1.1rem;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>MealMap Logo Concepts</h1>
+    <p class="lede">
+      Four starter directions for the MealMap app icon. Each one emphasizes a different part of the product:
+      location-aware meal discovery, route/planning, pantry freshness, and structured kitchen mapping.
+    </p>
+
+    <section class="grid">
+      <article class="card">
+        <img src="./mealmap-logo-concept-1-pin-plate.svg" alt="MealMap logo concept 1" />
+        <h2>1. Pin + Plate</h2>
+        <p>The clearest app-store direction. It reads as food plus location immediately and feels friendly and modern.</p>
+      </article>
+
+      <article class="card">
+        <img src="./mealmap-logo-concept-2-route-m.svg" alt="MealMap logo concept 2" />
+        <h2>2. Route M</h2>
+        <p>A more premium monogram route. Good if we want MealMap to feel slightly smarter and more product-led.</p>
+      </article>
+
+      <article class="card">
+        <img src="./mealmap-logo-concept-3-pantry-leaf.svg" alt="MealMap logo concept 3" />
+        <h2>3. Pantry Leaf</h2>
+        <p>Leans into pantry freshness, ingredients, and low-waste planning. Feels warm, homey, and approachable.</p>
+      </article>
+
+      <article class="card">
+        <img src="./mealmap-logo-concept-4-grid-marker.svg" alt="MealMap logo concept 4" />
+        <h2>4. Grid Marker</h2>
+        <p>A more system-oriented direction with a mapped kitchen/grid feel. Stronger if we want a tech-forward brand.</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

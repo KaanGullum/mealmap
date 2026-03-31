@@ -1,0 +1,21 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg6" x1="120" y1="110" x2="906" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0D5E55"/>
+      <stop offset="1" stop-color="#143A63"/>
+    </linearGradient>
+    <linearGradient id="soup6" x1="382" y1="492" x2="640" y2="640" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFAE3B"/>
+      <stop offset="1" stop-color="#F36A3D"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="232" fill="url(#bg6)"/>
+  <path d="M512 252C482 252 458 276 458 306C458 339 489 366 512 388C535 366 566 339 566 306C566 276 542 252 512 252Z" fill="#FFD874"/>
+  <circle cx="512" cy="306" r="16" fill="#0D5E55"/>
+  <rect x="318" y="438" width="388" height="44" rx="22" fill="#F5FBFF"/>
+  <path d="M334 478H690C690 612 608 708 512 708C416 708 334 612 334 478Z" fill="#F5FBFF"/>
+  <path d="M382 496H642C630 576 580 634 512 634C444 634 394 576 382 496Z" fill="url(#soup6)"/>
+  <path d="M420 572C462 528 514 520 564 548" stroke="#FFF6E4" stroke-width="24" stroke-linecap="round"/>
+  <circle cx="586" cy="566" r="14" fill="#FFF6E4"/>
+  <path d="M400 760H624" stroke="#F5FBFF" stroke-width="42" stroke-linecap="round"/>
+</svg>
