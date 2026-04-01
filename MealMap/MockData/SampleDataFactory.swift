@@ -17,10 +17,190 @@ struct AppSeedData {
     }
 }
 
+struct SamplePantryDefinition {
+    let id: UUID
+    let nameKey: String
+    let quantity: Double
+    let unit: IngredientUnit
+    let category: PantryCategory
+    let expirationOffsetDays: Int?
+    let isStaple: Bool
+}
+
+struct SampleRecipeIngredientDefinition {
+    let ingredientKey: String
+    let quantity: Double
+    let unit: IngredientUnit
+}
+
+struct SampleRecipeDefinition {
+    let id: UUID
+    let titleKey: String
+    let summaryKey: String
+    let ingredients: [SampleRecipeIngredientDefinition]
+    let instructionKeys: [String]
+    let tagKeys: [String]
+    let estimatedCost: Double
+    let prepTimeMinutes: Int
+}
+
 enum SampleDataFactory {
-    static func seedData(referenceDate: Date = .now) -> AppSeedData {
-        let pantryItems = samplePantry(referenceDate: referenceDate)
-        let recipes = sampleRecipes()
+    static let pantryDefinitions: [SamplePantryDefinition] = [
+        SamplePantryDefinition(id: sampleID("5EED0000-0000-0000-0000-000000000001"), nameKey: "Spinach", quantity: 1, unit: .bunch, category: .produce, expirationOffsetDays: 1, isStaple: false),
+        SamplePantryDefinition(id: sampleID("5EED0000-0000-0000-0000-000000000002"), nameKey: "Tomatoes", quantity: 4, unit: .piece, category: .produce, expirationOffsetDays: 3, isStaple: false),
+        SamplePantryDefinition(id: sampleID("5EED0000-0000-0000-0000-000000000003"), nameKey: "Milk", quantity: 1, unit: .liter, category: .dairy, expirationOffsetDays: 4, isStaple: false),
+        SamplePantryDefinition(id: sampleID("5EED0000-0000-0000-0000-000000000004"), nameKey: "Eggs", quantity: 6, unit: .piece, category: .protein, expirationOffsetDays: 5, isStaple: false),
+        SamplePantryDefinition(id: sampleID("5EED0000-0000-0000-0000-000000000005"), nameKey: "Rice", quantity: 1.5, unit: .kilogram, category: .grains, expirationOffsetDays: nil, isStaple: true),
+        SamplePantryDefinition(id: sampleID("5EED0000-0000-0000-0000-000000000006"), nameKey: "Pasta", quantity: 500, unit: .gram, category: .grains, expirationOffsetDays: nil, isStaple: true),
+        SamplePantryDefinition(id: sampleID("5EED0000-0000-0000-0000-000000000007"), nameKey: "Canned Chickpeas", quantity: 2, unit: .can, category: .cannedGoods, expirationOffsetDays: nil, isStaple: true),
+        SamplePantryDefinition(id: sampleID("5EED0000-0000-0000-0000-000000000008"), nameKey: "Olive Oil", quantity: 500, unit: .milliliter, category: .other, expirationOffsetDays: nil, isStaple: true),
+        SamplePantryDefinition(id: sampleID("5EED0000-0000-0000-0000-000000000009"), nameKey: "Garlic", quantity: 1, unit: .bunch, category: .produce, expirationOffsetDays: 7, isStaple: false),
+        SamplePantryDefinition(id: sampleID("5EED0000-0000-0000-0000-00000000000A"), nameKey: "Yogurt", quantity: 2, unit: .cup, category: .dairy, expirationOffsetDays: 2, isStaple: false),
+        SamplePantryDefinition(id: sampleID("5EED0000-0000-0000-0000-00000000000B"), nameKey: "Cheddar", quantity: 8, unit: .slice, category: .dairy, expirationOffsetDays: 8, isStaple: false),
+        SamplePantryDefinition(id: sampleID("5EED0000-0000-0000-0000-00000000000C"), nameKey: "Black Beans", quantity: 1, unit: .can, category: .cannedGoods, expirationOffsetDays: nil, isStaple: true),
+    ]
+
+    static let recipeDefinitions: [SampleRecipeDefinition] = [
+        SampleRecipeDefinition(
+            id: sampleID("5EED1000-0000-0000-0000-000000000001"),
+            titleKey: "Creamy Spinach Pasta",
+            summaryKey: "Fast weeknight pasta that uses up spinach and dairy staples.",
+            ingredients: [
+                SampleRecipeIngredientDefinition(ingredientKey: "Pasta", quantity: 250, unit: .gram),
+                SampleRecipeIngredientDefinition(ingredientKey: "Spinach", quantity: 1, unit: .bunch),
+                SampleRecipeIngredientDefinition(ingredientKey: "Milk", quantity: 250, unit: .milliliter),
+                SampleRecipeIngredientDefinition(ingredientKey: "Garlic", quantity: 0.5, unit: .bunch),
+                SampleRecipeIngredientDefinition(ingredientKey: "Cheddar", quantity: 4, unit: .slice),
+            ],
+            instructionKeys: [
+                "Boil the pasta until tender.",
+                "Saute garlic, add spinach, and let it wilt.",
+                "Stir in milk and cheddar to form a quick sauce.",
+                "Toss the pasta with the sauce and serve warm."
+            ],
+            tagKeys: ["Quick", "Vegetarian", "Budget"],
+            estimatedCost: 6.50,
+            prepTimeMinutes: 20
+        ),
+        SampleRecipeDefinition(
+            id: sampleID("5EED1000-0000-0000-0000-000000000002"),
+            titleKey: "Chickpea Tomato Bowls",
+            summaryKey: "Pantry-friendly grain bowl with tomatoes and yogurt sauce.",
+            ingredients: [
+                SampleRecipeIngredientDefinition(ingredientKey: "Rice", quantity: 1.5, unit: .cup),
+                SampleRecipeIngredientDefinition(ingredientKey: "Canned Chickpeas", quantity: 1, unit: .can),
+                SampleRecipeIngredientDefinition(ingredientKey: "Tomatoes", quantity: 2, unit: .piece),
+                SampleRecipeIngredientDefinition(ingredientKey: "Yogurt", quantity: 1, unit: .cup),
+                SampleRecipeIngredientDefinition(ingredientKey: "Garlic", quantity: 0.25, unit: .bunch),
+            ],
+            instructionKeys: [
+                "Cook the rice until fluffy.",
+                "Warm chickpeas with chopped tomatoes and garlic.",
+                "Spoon over rice and finish with yogurt."
+            ],
+            tagKeys: ["Meal Prep", "Budget", "High Protein"],
+            estimatedCost: 5.25,
+            prepTimeMinutes: 25
+        ),
+        SampleRecipeDefinition(
+            id: sampleID("5EED1000-0000-0000-0000-000000000003"),
+            titleKey: "Veggie Fried Rice",
+            summaryKey: "Budget-friendly fried rice built around eggs and leftover produce.",
+            ingredients: [
+                SampleRecipeIngredientDefinition(ingredientKey: "Rice", quantity: 2, unit: .cup),
+                SampleRecipeIngredientDefinition(ingredientKey: "Eggs", quantity: 3, unit: .piece),
+                SampleRecipeIngredientDefinition(ingredientKey: "Spinach", quantity: 0.5, unit: .bunch),
+                SampleRecipeIngredientDefinition(ingredientKey: "Tomatoes", quantity: 1, unit: .piece),
+                SampleRecipeIngredientDefinition(ingredientKey: "Olive Oil", quantity: 1, unit: .tablespoon),
+            ],
+            instructionKeys: [
+                "Scramble the eggs and set aside.",
+                "Pan-fry vegetables in olive oil.",
+                "Add cooked rice, then fold the eggs back in and season."
+            ],
+            tagKeys: ["Quick", "Budget", "Use What You Have"],
+            estimatedCost: 4.75,
+            prepTimeMinutes: 18
+        ),
+        SampleRecipeDefinition(
+            id: sampleID("5EED1000-0000-0000-0000-000000000004"),
+            titleKey: "Tomato Egg Toasts",
+            summaryKey: "Simple breakfast-for-dinner option with pantry staples.",
+            ingredients: [
+                SampleRecipeIngredientDefinition(ingredientKey: "Eggs", quantity: 2, unit: .piece),
+                SampleRecipeIngredientDefinition(ingredientKey: "Tomatoes", quantity: 2, unit: .piece),
+                SampleRecipeIngredientDefinition(ingredientKey: "Cheddar", quantity: 2, unit: .slice),
+                SampleRecipeIngredientDefinition(ingredientKey: "Bread", quantity: 4, unit: .slice),
+            ],
+            instructionKeys: [
+                "Toast the bread slices.",
+                "Cook tomatoes and eggs together in a skillet.",
+                "Layer over toast with cheddar and serve."
+            ],
+            tagKeys: ["Breakfast", "Quick"],
+            estimatedCost: 3.90,
+            prepTimeMinutes: 15
+        ),
+        SampleRecipeDefinition(
+            id: sampleID("5EED1000-0000-0000-0000-000000000005"),
+            titleKey: "Black Bean Rice Skillet",
+            summaryKey: "Budget dinner with pantry beans, rice, and melted cheddar.",
+            ingredients: [
+                SampleRecipeIngredientDefinition(ingredientKey: "Rice", quantity: 1.5, unit: .cup),
+                SampleRecipeIngredientDefinition(ingredientKey: "Black Beans", quantity: 1, unit: .can),
+                SampleRecipeIngredientDefinition(ingredientKey: "Tomatoes", quantity: 2, unit: .piece),
+                SampleRecipeIngredientDefinition(ingredientKey: "Cheddar", quantity: 4, unit: .slice),
+                SampleRecipeIngredientDefinition(ingredientKey: "Olive Oil", quantity: 1, unit: .tablespoon),
+            ],
+            instructionKeys: [
+                "Cook rice and keep warm.",
+                "Simmer beans and tomatoes together.",
+                "Fold in rice, top with cheddar, and finish in the skillet."
+            ],
+            tagKeys: ["Budget", "Meal Prep", "Comfort Food"],
+            estimatedCost: 5.10,
+            prepTimeMinutes: 22
+        ),
+        SampleRecipeDefinition(
+            id: sampleID("5EED1000-0000-0000-0000-000000000006"),
+            titleKey: "Yogurt Fruit Parfait",
+            summaryKey: "Customizable breakfast recipe ready for future nutrition tracking.",
+            ingredients: [
+                SampleRecipeIngredientDefinition(ingredientKey: "Yogurt", quantity: 1, unit: .cup),
+                SampleRecipeIngredientDefinition(ingredientKey: "Granola", quantity: 1, unit: .cup),
+                SampleRecipeIngredientDefinition(ingredientKey: "Banana", quantity: 1, unit: .piece),
+            ],
+            instructionKeys: [
+                "Layer yogurt, granola, and sliced banana in a glass.",
+                "Serve immediately."
+            ],
+            tagKeys: ["Breakfast", "Quick"],
+            estimatedCost: 4.40,
+            prepTimeMinutes: 5
+        ),
+    ]
+
+    static var sampleIngredientKeys: [String] {
+        let allKeys = pantryDefinitions.map(\.nameKey) + recipeDefinitions.flatMap { definition in
+            definition.ingredients.map(\.ingredientKey)
+        }
+
+        var keys: [String] = []
+        var seen = Set<String>()
+
+        for key in allKeys where seen.insert(key).inserted {
+            keys.append(key)
+        }
+
+        return keys
+    }
+
+    static func seedData(
+        referenceDate: Date = .now,
+        localeIdentifier: String = L10n.currentSupportedLocaleIdentifier
+    ) -> AppSeedData {
+        let pantryItems = samplePantry(referenceDate: referenceDate, localeIdentifier: localeIdentifier)
+        let recipes = sampleRecipes(localeIdentifier: localeIdentifier)
 
         let weekDates = WeekDateProvider.currentWeekDates(referenceDate: referenceDate)
         let mealPlanEntries = [
@@ -37,136 +217,59 @@ enum SampleDataFactory {
         )
     }
 
-    static func samplePantry(referenceDate: Date = .now) -> [PantryItem] {
-        [
-            PantryItem(name: "Spinach", quantity: 1, unit: .bunch, category: .produce, expirationDate: Calendar.current.date(byAdding: .day, value: 1, to: referenceDate)),
-            PantryItem(name: "Tomatoes", quantity: 4, unit: .piece, category: .produce, expirationDate: Calendar.current.date(byAdding: .day, value: 3, to: referenceDate)),
-            PantryItem(name: "Milk", quantity: 1, unit: .liter, category: .dairy, expirationDate: Calendar.current.date(byAdding: .day, value: 4, to: referenceDate)),
-            PantryItem(name: "Eggs", quantity: 6, unit: .piece, category: .protein, expirationDate: Calendar.current.date(byAdding: .day, value: 5, to: referenceDate)),
-            PantryItem(name: "Rice", quantity: 1.5, unit: .kilogram, category: .grains, isStaple: true),
-            PantryItem(name: "Pasta", quantity: 500, unit: .gram, category: .grains, isStaple: true),
-            PantryItem(name: "Canned Chickpeas", quantity: 2, unit: .can, category: .cannedGoods, isStaple: true),
-            PantryItem(name: "Olive Oil", quantity: 500, unit: .milliliter, category: .other, isStaple: true),
-            PantryItem(name: "Garlic", quantity: 1, unit: .bunch, category: .produce, expirationDate: Calendar.current.date(byAdding: .day, value: 7, to: referenceDate)),
-            PantryItem(name: "Yogurt", quantity: 2, unit: .cup, category: .dairy, expirationDate: Calendar.current.date(byAdding: .day, value: 2, to: referenceDate)),
-            PantryItem(name: "Cheddar", quantity: 8, unit: .slice, category: .dairy, expirationDate: Calendar.current.date(byAdding: .day, value: 8, to: referenceDate)),
-            PantryItem(name: "Black Beans", quantity: 1, unit: .can, category: .cannedGoods, isStaple: true),
-        ]
+    static func samplePantry(
+        referenceDate: Date = .now,
+        localeIdentifier: String = L10n.currentSupportedLocaleIdentifier
+    ) -> [PantryItem] {
+        pantryDefinitions.map { definition in
+            PantryItem(
+                id: definition.id,
+                name: localized(definition.nameKey, localeIdentifier: localeIdentifier),
+                quantity: definition.quantity,
+                unit: definition.unit,
+                category: definition.category,
+                expirationDate: definition.expirationOffsetDays.flatMap {
+                    Calendar.current.date(byAdding: .day, value: $0, to: referenceDate)
+                },
+                isStaple: definition.isStaple
+            )
+        }
     }
 
-    static func sampleRecipes() -> [Recipe] {
-        [
+    static func sampleRecipes(
+        localeIdentifier: String = L10n.currentSupportedLocaleIdentifier
+    ) -> [Recipe] {
+        recipeDefinitions.map { definition in
             Recipe(
-                title: "Creamy Spinach Pasta",
-                summary: "Fast weeknight pasta that uses up spinach and dairy staples.",
-                ingredients: [
-                    RecipeIngredient(ingredientName: "Pasta", quantity: 250, unit: .gram),
-                    RecipeIngredient(ingredientName: "Spinach", quantity: 1, unit: .bunch),
-                    RecipeIngredient(ingredientName: "Milk", quantity: 250, unit: .milliliter),
-                    RecipeIngredient(ingredientName: "Garlic", quantity: 0.5, unit: .bunch),
-                    RecipeIngredient(ingredientName: "Cheddar", quantity: 4, unit: .slice),
-                ],
-                instructions: """
-                Boil the pasta until tender.
-                Saute garlic, add spinach, and let it wilt.
-                Stir in milk and cheddar to form a quick sauce.
-                Toss the pasta with the sauce and serve warm.
-                """,
-                tags: ["Quick", "Vegetarian", "Budget"],
-                estimatedCost: 6.50,
-                prepTimeMinutes: 20
-            ),
-            Recipe(
-                title: "Chickpea Tomato Bowls",
-                summary: "Pantry-friendly grain bowl with tomatoes and yogurt sauce.",
-                ingredients: [
-                    RecipeIngredient(ingredientName: "Rice", quantity: 1.5, unit: .cup),
-                    RecipeIngredient(ingredientName: "Canned Chickpeas", quantity: 1, unit: .can),
-                    RecipeIngredient(ingredientName: "Tomatoes", quantity: 2, unit: .piece),
-                    RecipeIngredient(ingredientName: "Yogurt", quantity: 1, unit: .cup),
-                    RecipeIngredient(ingredientName: "Garlic", quantity: 0.25, unit: .bunch),
-                ],
-                instructions: """
-                Cook the rice until fluffy.
-                Warm chickpeas with chopped tomatoes and garlic.
-                Spoon over rice and finish with yogurt.
-                """,
-                tags: ["Meal Prep", "Budget", "High Protein"],
-                estimatedCost: 5.25,
-                prepTimeMinutes: 25
-            ),
-            Recipe(
-                title: "Veggie Fried Rice",
-                summary: "Budget-friendly fried rice built around eggs and leftover produce.",
-                ingredients: [
-                    RecipeIngredient(ingredientName: "Rice", quantity: 2, unit: .cup),
-                    RecipeIngredient(ingredientName: "Eggs", quantity: 3, unit: .piece),
-                    RecipeIngredient(ingredientName: "Spinach", quantity: 0.5, unit: .bunch),
-                    RecipeIngredient(ingredientName: "Tomatoes", quantity: 1, unit: .piece),
-                    RecipeIngredient(ingredientName: "Olive Oil", quantity: 1, unit: .tablespoon),
-                ],
-                instructions: """
-                Scramble the eggs and set aside.
-                Pan-fry vegetables in olive oil.
-                Add cooked rice, then fold the eggs back in and season.
-                """,
-                tags: ["Quick", "Budget", "Use What You Have"],
-                estimatedCost: 4.75,
-                prepTimeMinutes: 18
-            ),
-            Recipe(
-                title: "Tomato Egg Toasts",
-                summary: "Simple breakfast-for-dinner option with pantry staples.",
-                ingredients: [
-                    RecipeIngredient(ingredientName: "Eggs", quantity: 2, unit: .piece),
-                    RecipeIngredient(ingredientName: "Tomatoes", quantity: 2, unit: .piece),
-                    RecipeIngredient(ingredientName: "Cheddar", quantity: 2, unit: .slice),
-                    RecipeIngredient(ingredientName: "Bread", quantity: 4, unit: .slice),
-                ],
-                instructions: """
-                Toast the bread slices.
-                Cook tomatoes and eggs together in a skillet.
-                Layer over toast with cheddar and serve.
-                """,
-                tags: ["Breakfast", "Quick"],
-                estimatedCost: 3.90,
-                prepTimeMinutes: 15
-            ),
-            Recipe(
-                title: "Black Bean Rice Skillet",
-                summary: "Budget dinner with pantry beans, rice, and melted cheddar.",
-                ingredients: [
-                    RecipeIngredient(ingredientName: "Rice", quantity: 1.5, unit: .cup),
-                    RecipeIngredient(ingredientName: "Black Beans", quantity: 1, unit: .can),
-                    RecipeIngredient(ingredientName: "Tomatoes", quantity: 2, unit: .piece),
-                    RecipeIngredient(ingredientName: "Cheddar", quantity: 4, unit: .slice),
-                    RecipeIngredient(ingredientName: "Olive Oil", quantity: 1, unit: .tablespoon),
-                ],
-                instructions: """
-                Cook rice and keep warm.
-                Simmer beans and tomatoes together.
-                Fold in rice, top with cheddar, and finish in the skillet.
-                """,
-                tags: ["Budget", "Meal Prep", "Comfort Food"],
-                estimatedCost: 5.10,
-                prepTimeMinutes: 22
-            ),
-            Recipe(
-                title: "Yogurt Fruit Parfait",
-                summary: "Customizable breakfast recipe ready for future nutrition tracking.",
-                ingredients: [
-                    RecipeIngredient(ingredientName: "Yogurt", quantity: 1, unit: .cup),
-                    RecipeIngredient(ingredientName: "Granola", quantity: 1, unit: .cup),
-                    RecipeIngredient(ingredientName: "Banana", quantity: 1, unit: .piece),
-                ],
-                instructions: """
-                Layer yogurt, granola, and sliced banana in a glass.
-                Serve immediately.
-                """,
-                tags: ["Breakfast", "Quick"],
-                estimatedCost: 4.40,
-                prepTimeMinutes: 5
-            ),
-        ]
+                id: definition.id,
+                title: localized(definition.titleKey, localeIdentifier: localeIdentifier),
+                summary: localized(definition.summaryKey, localeIdentifier: localeIdentifier),
+                ingredients: definition.ingredients.map { ingredient in
+                    RecipeIngredient(
+                        ingredientName: localized(ingredient.ingredientKey, localeIdentifier: localeIdentifier),
+                        quantity: ingredient.quantity,
+                        unit: ingredient.unit
+                    )
+                },
+                instructions: definition.instructionKeys
+                    .map { localized($0, localeIdentifier: localeIdentifier) }
+                    .joined(separator: "\n"),
+                tags: definition.tagKeys.map { localized($0, localeIdentifier: localeIdentifier) },
+                estimatedCost: definition.estimatedCost,
+                prepTimeMinutes: definition.prepTimeMinutes
+            )
+        }
+    }
+
+    private static func sampleID(_ rawValue: String) -> UUID {
+        guard let value = UUID(uuidString: rawValue) else {
+            preconditionFailure("Invalid sample UUID: \(rawValue)")
+        }
+
+        return value
+    }
+
+    private static func localized(_ key: String, localeIdentifier: String) -> String {
+        L10n.text(key, localeIdentifier: localeIdentifier)
     }
 }

@@ -7,6 +7,7 @@ struct PantryView: View {
     @StateObject private var viewModel = PantryViewModel()
     @State private var showAddForm = false
     @State private var editingItem: PantryItem?
+    @AppStorage("lastUsedPantryCategory") private var lastUsedPantryCategoryRawValue = PantryCategory.produce.rawValue
 
     init() {}
 
@@ -18,10 +19,10 @@ struct PantryView: View {
 
                     if filteredItems.isEmpty {
                         EmptyStateView(
-                            title: "Your pantry is empty",
-                            message: "Add a few ingredients to unlock recipe matching and shopping list generation.",
+                            title: L10n.text("Your pantry is empty"),
+                            message: L10n.text("Add a few ingredients to unlock recipe matching and shopping list generation."),
                             systemImage: "cabinet",
-                            buttonTitle: "Add Item"
+                            buttonTitle: L10n.text("Add Item")
                         ) {
                             showAddForm = true
                         }
@@ -62,7 +63,7 @@ struct PantryView: View {
         }
         .sheet(isPresented: $showAddForm) {
             NavigationStack {
-                PantryFormView()
+                PantryFormView(defaultCategory: defaultCategoryForNewItem)
             }
         }
         .sheet(item: $editingItem) { item in
@@ -80,7 +81,7 @@ struct PantryView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 10) {
                 FilterChip(
-                    title: "All",
+                    title: L10n.text("All"),
                     isSelected: viewModel.selectedCategory == nil
                 ) {
                     viewModel.selectedCategory = nil
@@ -96,6 +97,14 @@ struct PantryView: View {
                 }
             }
         }
+    }
+
+    private var defaultCategoryForNewItem: PantryCategory {
+        if let selectedCategory = viewModel.selectedCategory {
+            return selectedCategory
+        }
+
+        return PantryCategory(rawValue: lastUsedPantryCategoryRawValue) ?? .produce
     }
 
     private func delete(_ item: PantryItem) {
@@ -119,7 +128,7 @@ private struct PantryItemRow: View {
                     Text(item.name)
                         .font(.headline)
                     if item.isStaple {
-                        TagChipView(title: "Staple")
+                        TagChipView(title: L10n.text("Staple"))
                     }
                 }
 
@@ -128,7 +137,7 @@ private struct PantryItemRow: View {
                     .foregroundStyle(.secondary)
 
                 if let expirationDate = item.expirationDate {
-                    Label("Expires \(expirationDate.dayMonthText)", systemImage: "clock")
+                    Label(L10n.expires(expirationDate.dayMonthText), systemImage: "clock")
                         .font(.caption)
                         .foregroundStyle(expirationDate.isWithinUpcoming(days: 3) ? .orange : .secondary)
                 }

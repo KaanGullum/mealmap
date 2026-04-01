@@ -14,8 +14,8 @@ struct ShoppingListView: View {
             if shoppingListItems.isEmpty {
                 Section {
                     EmptyStateView(
-                        title: "Shopping list is empty",
-                        message: "Generate a list from the weekly planner and only missing ingredients will appear here.",
+                        title: L10n.text("Shopping list is empty"),
+                        message: L10n.text("Generate a list from the weekly planner and only missing ingredients will appear here."),
                         systemImage: "cart"
                     )
                 }
@@ -23,12 +23,12 @@ struct ShoppingListView: View {
                 Section {
                     HStack {
                         SummaryMetricCard(
-                            title: "Items",
+                            title: L10n.text("Items"),
                             value: "\(shoppingListItems.count)",
                             systemImage: "cart"
                         )
                         SummaryMetricCard(
-                            title: "Checked",
+                            title: L10n.text("Checked"),
                             value: "\(shoppingListItems.filter(\.isChecked).count)",
                             systemImage: "checkmark.circle"
                         )

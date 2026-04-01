@@ -23,9 +23,9 @@ struct RecipeDetailView: View {
                         .foregroundStyle(.secondary)
 
                     HStack(spacing: 12) {
-                        Label(recipe.estimatedCost.currencyText, systemImage: "dollarsign.circle")
-                        Label("\(recipe.prepTimeMinutes) min", systemImage: "timer")
-                        Label("\(recipe.ingredients.count) ingredients", systemImage: "list.bullet")
+                        Label(recipe.estimatedCost.currencyText, systemImage: MealMapSymbols.cost)
+                        Label(L10n.minutes(recipe.prepTimeMinutes), systemImage: "timer")
+                        Label(L10n.ingredientCount(recipe.ingredients.count), systemImage: "list.bullet")
                     }
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -56,7 +56,7 @@ struct RecipeDetailView: View {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(ingredient.ingredientName)
                                     .font(.body.weight(.medium))
-                                Text("\(ingredient.quantity.quantityText(unit: ingredient.unit)) needed")
+                                Text(L10n.quantityNeeded(ingredient.quantity.quantityText(unit: ingredient.unit)))
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
@@ -64,7 +64,7 @@ struct RecipeDetailView: View {
                             Spacer()
 
                             if isCovered == false {
-                                Text("Need \(max(ingredient.quantity - availableQuantity, 0).quantityText(unit: ingredient.unit))")
+                                Text(L10n.needQuantity(max(ingredient.quantity - availableQuantity, 0).quantityText(unit: ingredient.unit)))
                                     .font(.caption)
                                     .foregroundStyle(.orange)
                             }

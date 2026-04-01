@@ -9,10 +9,10 @@ struct SampleDataLoader {
         let pantryCount = (try? context.fetch(pantryDescriptor).count) ?? 0
         let recipeCount = (try? context.fetch(recipeDescriptor).count) ?? 0
 
-        guard pantryCount == 0, recipeCount == 0 else {
-            return
+        if pantryCount == 0, recipeCount == 0 {
+            SampleDataFactory.seedData().insertAll(into: context)
         }
 
-        SampleDataFactory.seedData().insertAll(into: context)
+        SampleDataLocalizationSynchronizer().synchronize(in: context)
     }
 }

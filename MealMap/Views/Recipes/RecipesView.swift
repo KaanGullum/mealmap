@@ -25,10 +25,10 @@ struct RecipesView: View {
             if filteredRecommendations.isEmpty {
                 Section {
                     EmptyStateView(
-                        title: "No recipes to show",
-                        message: "Add a custom recipe or relax the pantry-only filter to see more ideas.",
+                        title: L10n.text("No recipes to show"),
+                        message: L10n.text("Add a custom recipe or relax the pantry-only filter to see more ideas."),
                         systemImage: "fork.knife",
-                        buttonTitle: "Add Recipe"
+                        buttonTitle: L10n.text("Add Recipe")
                     ) {
                         showAddRecipe = true
                     }
@@ -122,8 +122,8 @@ private struct RecipeListRow: View {
             }
 
             HStack(spacing: 12) {
-                Label(recommendation.recipe.estimatedCost.currencyText, systemImage: "dollarsign.circle")
-                Label("\(recommendation.recipe.prepTimeMinutes) min", systemImage: "timer")
+                Label(recommendation.recipe.estimatedCost.currencyText, systemImage: MealMapSymbols.cost)
+                Label(L10n.minutes(recommendation.recipe.prepTimeMinutes), systemImage: "timer")
                 Label(recommendation.matchSummary, systemImage: "checkmark.circle")
             }
             .font(.caption)

@@ -14,7 +14,7 @@ struct RecipeFormView: View {
                 TextField("Estimated cost", value: $viewModel.estimatedCost, format: .number)
                     .keyboardType(.decimalPad)
                 Stepper(value: $viewModel.prepTimeMinutes, in: 5...180, step: 5) {
-                    Label("\(viewModel.prepTimeMinutes) min prep time", systemImage: "timer")
+                    Label(L10n.prepTime(viewModel.prepTimeMinutes), systemImage: "timer")
                 }
                 TextField("Tags (comma separated)", text: $viewModel.tagsText)
             }

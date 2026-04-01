@@ -34,7 +34,7 @@ struct MealPlanPickerView: View {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(recipe.title)
                                         .foregroundStyle(.primary)
-                                    Text("\(recipe.prepTimeMinutes) min • \(recipe.estimatedCost.currencyText)")
+                                    Text(L10n.durationAndCost(minutes: recipe.prepTimeMinutes, costText: recipe.estimatedCost.currencyText))
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
@@ -50,7 +50,7 @@ struct MealPlanPickerView: View {
                     }
                 }
             }
-            .navigationTitle("\(mealType.title) • \(date.formatted(.dateTime.month().day()))")
+            .navigationTitle(L10n.mealTypeAndDate(mealType.title, dateText: date.formatted(.dateTime.month().day())))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {

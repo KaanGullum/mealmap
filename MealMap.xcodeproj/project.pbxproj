@@ -6,6 +6,16 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		4AE133072F7D0000006F0C5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4AE132AD2F7C5A540006F0C5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4AE132B42F7C5A540006F0C5;
+			remoteInfo = MealMap;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		4AE132B52F7C5A540006F0C5 /* MealMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MealMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AE133012F7D0000006F0C5 /* MealMapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MealMapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -133,6 +143,7 @@
 			knownRegions = (
 				en,
 				Base,
+				tr,
 			);
 			mainGroup = 4AE132AC2F7C5A540006F0C5;
 			minimizedProjectReferenceProxies = 1;
@@ -180,16 +191,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXContainerItemProxy section */
-		4AE133072F7D0000006F0C5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4AE132AD2F7C5A540006F0C5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4AE132B42F7C5A540006F0C5;
-			remoteInfo = MealMap;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXTargetDependency section */
 		4AE133082F7D0000006F0C5 /* PBXTargetDependency */ = {

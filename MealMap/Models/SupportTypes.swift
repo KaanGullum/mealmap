@@ -19,19 +19,19 @@ enum IngredientUnit: String, Codable, CaseIterable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .piece: "pcs"
+        case .piece: L10n.text("pcs")
         case .gram: "g"
         case .kilogram: "kg"
         case .milliliter: "ml"
         case .liter: "L"
-        case .cup: "cup"
-        case .tablespoon: "tbsp"
-        case .teaspoon: "tsp"
-        case .can: "can"
-        case .pack: "pack"
-        case .slice: "slice"
-        case .bunch: "bunch"
-        case .loaf: "loaf"
+        case .cup: L10n.text("cup")
+        case .tablespoon: L10n.text("tbsp")
+        case .teaspoon: L10n.text("tsp")
+        case .can: L10n.text("can")
+        case .pack: L10n.text("pack")
+        case .slice: L10n.text("slice")
+        case .bunch: L10n.text("bunch")
+        case .loaf: L10n.text("loaf")
         }
     }
 }
@@ -53,17 +53,17 @@ enum PantryCategory: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .produce: "Produce"
-        case .dairy: "Dairy"
-        case .protein: "Protein"
-        case .grains: "Grains"
-        case .cannedGoods: "Canned"
-        case .frozen: "Frozen"
-        case .spices: "Spices"
-        case .bakery: "Bakery"
-        case .snacks: "Snacks"
-        case .beverages: "Beverages"
-        case .other: "Other"
+        case .produce: L10n.text("Produce")
+        case .dairy: L10n.text("Dairy")
+        case .protein: L10n.text("Protein")
+        case .grains: L10n.text("Grains")
+        case .cannedGoods: L10n.text("Canned")
+        case .frozen: L10n.text("Frozen")
+        case .spices: L10n.text("Spices")
+        case .bakery: L10n.text("Bakery")
+        case .snacks: L10n.text("Snacks")
+        case .beverages: L10n.text("Beverages")
+        case .other: L10n.text("Other")
         }
     }
 
@@ -91,7 +91,13 @@ enum MealType: String, Codable, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var title: String { rawValue.capitalized }
+    var title: String {
+        switch self {
+        case .breakfast: L10n.text("Breakfast")
+        case .lunch: L10n.text("Lunch")
+        case .dinner: L10n.text("Dinner")
+        }
+    }
 
     var systemImage: String {
         switch self {

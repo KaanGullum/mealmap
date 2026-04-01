@@ -1,0 +1,206 @@
+"Dashboard" = "Ana Sayfa";
+"Pantry" = "Kiler";
+"Recipes" = "Tarifler";
+"Planner" = "Planlayıcı";
+"Shopping" = "Alışveriş";
+"Settings" = "Ayarlar";
+
+"Cook more from what you already have." = "Elindekilerle daha fazla pişir.";
+
+"Plan a week of meals around the ingredients you already have, catch items expiring soon, and keep your shopping list focused." = "Evde zaten bulunan malzemelere göre bir haftalık öğün planı yapın, son kullanma tarihi yaklaşan ürünleri görün ve alışveriş listenizi sade tutun.";
+"Pantry-aware suggestions" = "Kilere göre akıllı öneriler";
+"Recipes are ranked by what you already own and what should be used soon." = "Tarifler, elinizde olanlara ve yakında kullanılması gereken ürünlere göre sıralanır.";
+"Budget-friendly planning" = "Bütçe dostu planlama";
+"Keep lower-cost recipes front and center while building the week." = "Haftayı planlarken daha düşük maliyetli tarifleri öne çıkarın.";
+"Clean shopping list" = "Temiz alışveriş listesi";
+"Only missing or insufficient ingredients are added, with duplicate items merged." = "Yalnızca eksik veya yetersiz malzemeler eklenir, tekrar eden öğeler birleştirilir.";
+"Runs fully offline with local sample data" = "Yerel örnek verilerle tamamen çevrimdışı çalışır";
+"Built with SwiftUI + SwiftData" = "SwiftUI + SwiftData ile geliştirildi";
+"Ready for future API integration" = "Gelecekteki API entegrasyonuna hazır";
+"Start Planning" = "Planlamaya Başla";
+
+"Plan smarter with the pantry you already have." = "Elinizdeki kilerle daha akıllı plan yapın.";
+"See what needs to be used soon, discover low-cost meals, and build the week without overbuying." = "Yakında kullanılması gerekenleri görün, düşük maliyetli öğünler keşfedin ve fazla alışveriş yapmadan haftanızı planlayın.";
+"Pantry Items" = "Kiler Öğeleri";
+"Expiring Soon" = "Yakında Bozulacak";
+"Planned Meals" = "Planlanan Öğünler";
+"Use these first" = "Önce bunları kullanın";
+"Nothing urgent right now" = "Şu anda acil bir şey yok";
+"Your pantry is in good shape. Add expiration dates to keep this area useful." = "Kileriniz iyi durumda. Bu alanı faydalı tutmak için son kullanma tarihleri ekleyin.";
+"Quick Actions" = "Hızlı İşlemler";
+"Suggested Meals" = "Önerilen Öğünler";
+"Ranked by pantry match, expiring ingredients, and budget preferences." = "Kiler eşleşmesi, son kullanma tarihi yaklaşan ürünler ve bütçe tercihlerine göre sıralanır.";
+"Budget" = "Bütçe";
+"Use what I have" = "Elimdekileri kullan";
+"No suggestions yet" = "Henüz öneri yok";
+"Add a few pantry items or recipes to unlock local meal recommendations." = "Yerel öğün önerilerini görmek için birkaç kiler öğesi veya tarif ekleyin.";
+"Uses expiring items" = "Tarihi yaklaşanları kullanır";
+"Ready now" = "Hemen yapılabilir";
+
+"Your pantry is empty" = "Kileriniz boş";
+"Add a few ingredients to unlock recipe matching and shopping list generation." = "Tarif eşleştirmeyi ve alışveriş listesi oluşturmayı açmak için birkaç malzeme ekleyin.";
+"Add Item" = "Öğe Ekle";
+"Items" = "Öğeler";
+"Delete" = "Sil";
+"Edit" = "Düzenle";
+"Search ingredients" = "Malzeme ara";
+"All" = "Tümü";
+"Staple" = "Temel";
+"Expires %@" = "Son kullanım: %@";
+"Add Pantry Item" = "Kiler Öğesi Ekle";
+"Edit Pantry Item" = "Kiler Öğesini Düzenle";
+"Ingredient" = "Malzeme";
+"Name" = "Ad";
+"Quantity" = "Miktar";
+"Unit" = "Birim";
+"Category" = "Kategori";
+"Details" = "Detaylar";
+"Staple item" = "Temel ürün";
+"Has expiration date" = "Son kullanma tarihi var";
+"Expiration Date" = "Son Kullanma Tarihi";
+"Cancel" = "İptal";
+"Save" = "Kaydet";
+
+"Budget-friendly ranking" = "Bütçe dostu sıralama";
+"Can be made with what I already have" = "Elimde olanlarla yapılabilir";
+"No recipes to show" = "Gösterilecek tarif yok";
+"Add a custom recipe or relax the pantry-only filter to see more ideas." = "Daha fazla fikir görmek için özel bir tarif ekleyin veya yalnızca kiler filtresini gevşetin.";
+"Add Recipe" = "Tarif Ekle";
+"Search recipes or tags" = "Tarif veya etiket ara";
+"Overview" = "Genel Bakış";
+"Recipe title" = "Tarif başlığı";
+"Short summary" = "Kısa özet";
+"Estimated cost" = "Tahmini maliyet";
+"%d min prep time" = "%d dk hazırlık süresi";
+"Tags (comma separated)" = "Etiketler (virgülle ayırın)";
+"Ingredients" = "Malzemeler";
+"Ingredient name" = "Malzeme adı";
+"Qty" = "Adet";
+"Add Ingredient" = "Malzeme Ekle";
+"Instructions" = "Hazırlanışı";
+"Add one step per line" = "Her satıra bir adım yazın";
+"%d min" = "%d dk";
+"%1$d/%2$d ingredients ready" = "%1$d/%2$d malzeme hazır";
+"%d ingredients" = "%d malzeme";
+"%@ needed" = "%@ gerekli";
+"Need %@" = "%@ eksik";
+"%1$d min • %2$@" = "%1$d dk • %2$@";
+
+"Build your week" = "Haftanızı oluşturun";
+"Pick recipes for each meal slot, then generate a shopping list for anything still missing." = "Her öğün için tarif seçin, ardından hâlâ eksik olanlar için alışveriş listesi oluşturun.";
+"Weekly Cost" = "Haftalık Maliyet";
+"Choose recipe" = "Tarif seç";
+"Generate Shopping List" = "Alışveriş Listesi Oluştur";
+"Weekly Planner" = "Haftalık Planlayıcı";
+"Shopping List Updated" = "Alışveriş Listesi Güncellendi";
+"OK" = "Tamam";
+"Everything needed for your planned meals is already in the pantry." = "Planladığınız öğünler için gereken her şey zaten kilerinizde.";
+"%d missing items were added to the shopping list." = "%d eksik öğe alışveriş listesine eklendi.";
+"Unable to generate the shopping list right now." = "Alışveriş listesi şu anda oluşturulamıyor.";
+"Clear Selection" = "Seçimi Temizle";
+"%1$@ • %2$@" = "%1$@ • %2$@";
+"Done" = "Bitti";
+
+"Shopping list is empty" = "Alışveriş listesi boş";
+"Generate a list from the weekly planner and only missing ingredients will appear here." = "Haftalık planlayıcıdan liste oluşturun; burada yalnızca eksik malzemeler görünür.";
+"Checked" = "İşaretlenen";
+"Shopping List" = "Alışveriş Listesi";
+"Remove Checked" = "İşaretlenenleri Sil";
+
+"Planning Preferences" = "Planlama Tercihleri";
+"Enable budget-friendly suggestions" = "Bütçe dostu önerileri etkinleştir";
+"Default to “Can be made with what I already have”" = "Varsayılan olarak “Elimde olanlarla yapılabilir” filtresini aç";
+"Current Mode" = "Mevcut Mod";
+"Local recommendation engine" = "Yerel öneri motoru";
+"This starter app runs entirely on-device with SwiftData and rule-based recommendations." = "Bu başlangıç uygulaması SwiftData ve kural tabanlı önerilerle tamamen cihaz üzerinde çalışır.";
+"Future API Integration" = "Gelecekteki API Entegrasyonu";
+"API connector placeholder for future AI meal recommendations" = "Gelecekteki yapay zeka yemek önerileri için API bağlantı noktası";
+"Budget profiles for tighter weekly cost controls" = "Daha sıkı haftalık maliyet kontrolü için bütçe profilleri";
+"Household sharing and cloud sync" = "Hane paylaşımı ve bulut senkronizasyonu";
+"Pantry barcode scanning and receipt OCR" = "Kiler için barkod tarama ve fiş OCR";
+
+"pcs" = "adet";
+"cup" = "su bardağı";
+"tbsp" = "yk";
+"tsp" = "çk";
+"can" = "konserve";
+"pack" = "paket";
+"slice" = "dilim";
+"bunch" = "demet";
+"loaf" = "somun";
+
+"Produce" = "Sebze/Meyve";
+"Dairy" = "Süt Ürünleri";
+"Protein" = "Protein";
+"Grains" = "Tahıllar";
+"Canned" = "Konserve";
+"Frozen" = "Dondurulmuş";
+"Spices" = "Baharatlar";
+"Bakery" = "Fırın";
+"Snacks" = "Atıştırmalık";
+"Beverages" = "İçecekler";
+"Other" = "Diğer";
+
+"Breakfast" = "Kahvaltı";
+"Lunch" = "Öğle Yemeği";
+"Dinner" = "Akşam Yemeği";
+
+"Spinach" = "Ispanak";
+"Tomatoes" = "Domates";
+"Milk" = "Süt";
+"Eggs" = "Yumurta";
+"Rice" = "Pirinç";
+"Pasta" = "Makarna";
+"Canned Chickpeas" = "Konserve Nohut";
+"Olive Oil" = "Zeytinyağı";
+"Garlic" = "Sarımsak";
+"Yogurt" = "Yoğurt";
+"Cheddar" = "Çedar";
+"Black Beans" = "Siyah Fasulye";
+"Bread" = "Ekmek";
+"Granola" = "Granola";
+"Banana" = "Muz";
+
+"Creamy Spinach Pasta" = "Kremalı Ispanaklı Makarna";
+"Fast weeknight pasta that uses up spinach and dairy staples." = "Ispanağı ve süt ürünlerini değerlendiren, hafta içi için hızlı bir makarna.";
+"Boil the pasta until tender." = "Makarnayı yumuşayana kadar haşlayın.";
+"Saute garlic, add spinach, and let it wilt." = "Sarımsağı soteleyin, ıspanağı ekleyip yumuşamasını bekleyin.";
+"Stir in milk and cheddar to form a quick sauce." = "Hızlı bir sos için sütü ve çedarı karıştırın.";
+"Toss the pasta with the sauce and serve warm." = "Makarnayı sosla karıştırın ve sıcak servis edin.";
+
+"Chickpea Tomato Bowls" = "Nohutlu Domates Kasesi";
+"Pantry-friendly grain bowl with tomatoes and yogurt sauce." = "Domates ve yoğurt soslu, kiler dostu tahıl kasesi.";
+"Cook the rice until fluffy." = "Pirinci tane tane olana kadar pişirin.";
+"Warm chickpeas with chopped tomatoes and garlic." = "Nohutu doğranmış domates ve sarımsakla ısıtın.";
+"Spoon over rice and finish with yogurt." = "Pirincin üzerine koyun ve yoğurtla tamamlayın.";
+
+"Veggie Fried Rice" = "Sebzeli Kızarmış Pilav";
+"Budget-friendly fried rice built around eggs and leftover produce." = "Yumurta ve elde kalan sebzelerle hazırlanan bütçe dostu kızarmış pilav.";
+"Scramble the eggs and set aside." = "Yumurtaları çırpıp pişirin ve kenara alın.";
+"Pan-fry vegetables in olive oil." = "Sebzeleri zeytinyağında tavada çevirin.";
+"Add cooked rice, then fold the eggs back in and season." = "Pişmiş pirinci ekleyin, sonra yumurtaları tekrar karıştırıp baharatlayın.";
+
+"Tomato Egg Toasts" = "Domatesli Yumurtalı Tostlar";
+"Simple breakfast-for-dinner option with pantry staples." = "Temel kiler ürünleriyle hazırlanan, akşam için de uygun pratik bir kahvaltı seçeneği.";
+"Toast the bread slices." = "Ekmek dilimlerini kızartın.";
+"Cook tomatoes and eggs together in a skillet." = "Domates ve yumurtayı tavada birlikte pişirin.";
+"Layer over toast with cheddar and serve." = "Tostun üzerine çedarla birlikte yerleştirip servis edin.";
+
+"Black Bean Rice Skillet" = "Siyah Fasulyeli Pirinç Tavası";
+"Budget dinner with pantry beans, rice, and melted cheddar." = "Kilerdeki fasulye, pirinç ve erimiş çedarla hazırlanan bütçe dostu akşam yemeği.";
+"Cook rice and keep warm." = "Pirinci pişirin ve sıcak tutun.";
+"Simmer beans and tomatoes together." = "Fasulye ve domatesi birlikte kısık ateşte pişirin.";
+"Fold in rice, top with cheddar, and finish in the skillet." = "Pirinci karıştırın, üzerine çedar ekleyin ve tavada tamamlayın.";
+
+"Yogurt Fruit Parfait" = "Yoğurtlu Meyveli Parfe";
+"Customizable breakfast recipe ready for future nutrition tracking." = "Gelecekte besin takibi için uygun, özelleştirilebilir bir kahvaltı tarifi.";
+"Layer yogurt, granola, and sliced banana in a glass." = "Bardakta yoğurt, granola ve dilimlenmiş muzu katmanlayın.";
+"Serve immediately." = "Hemen servis edin.";
+
+"Quick" = "Hızlı";
+"Vegetarian" = "Vejetaryen";
+"Budget" = "Bütçe Dostu";
+"Meal Prep" = "Önceden Hazırlık";
+"High Protein" = "Yüksek Protein";
+"Use What You Have" = "Elindekileri Kullan";
+"Comfort Food" = "Konfor Yemeği";

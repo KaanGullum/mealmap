@@ -5,8 +5,8 @@ struct PantryFormView: View {
     @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel: PantryFormViewModel
 
-    init(item: PantryItem? = nil) {
-        _viewModel = StateObject(wrappedValue: PantryFormViewModel(item: item))
+    init(item: PantryItem? = nil, defaultCategory: PantryCategory? = nil) {
+        _viewModel = StateObject(wrappedValue: PantryFormViewModel(item: item, defaultCategory: defaultCategory))
     }
 
     var body: some View {

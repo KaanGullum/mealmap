@@ -16,7 +16,7 @@ struct RecipeRecommendation: Identifiable {
     }
 
     var matchSummary: String {
-        "\(matchedIngredientCount)/\(totalIngredientCount) ingredients ready"
+        L10n.readyIngredients(matched: matchedIngredientCount, total: totalIngredientCount)
     }
 }
 

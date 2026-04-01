@@ -84,17 +84,17 @@ struct DashboardView: View {
 
             HStack(spacing: 12) {
                 SummaryMetricCard(
-                    title: "Pantry Items",
+                    title: L10n.text("Pantry Items"),
                     value: "\(viewModel.pantrySummary.totalItems)",
                     systemImage: "cabinet"
                 )
                 SummaryMetricCard(
-                    title: "Expiring Soon",
+                    title: L10n.text("Expiring Soon"),
                     value: "\(viewModel.pantrySummary.expiringSoonItems)",
                     systemImage: "clock.badge"
                 )
                 SummaryMetricCard(
-                    title: "Planned Meals",
+                    title: L10n.text("Planned Meals"),
                     value: "\(viewModel.plannedMealsCount)",
                     systemImage: "calendar"
                 )
@@ -126,8 +126,8 @@ struct DashboardView: View {
 
             if viewModel.expiringSoonItems.isEmpty {
                 EmptyStateView(
-                    title: "Nothing urgent right now",
-                    message: "Your pantry is in good shape. Add expiration dates to keep this area useful.",
+                    title: L10n.text("Nothing urgent right now"),
+                    message: L10n.text("Your pantry is in good shape. Add expiration dates to keep this area useful."),
                     systemImage: "checkmark.seal"
                 )
             } else {
@@ -166,16 +166,16 @@ struct DashboardView: View {
                 .font(.headline)
 
             HStack(spacing: 12) {
-                DashboardActionButton(title: "Pantry", systemImage: "plus.circle") {
+                DashboardActionButton(title: L10n.text("Pantry"), systemImage: "plus.circle") {
                     selectedTab = .pantry
                 }
-                DashboardActionButton(title: "Recipes", systemImage: "fork.knife.circle") {
+                DashboardActionButton(title: L10n.text("Recipes"), systemImage: "fork.knife.circle") {
                     selectedTab = .recipes
                 }
-                DashboardActionButton(title: "Planner", systemImage: "calendar.badge.plus") {
+                DashboardActionButton(title: L10n.text("Planner"), systemImage: "calendar.badge.plus") {
                     selectedTab = .planner
                 }
-                DashboardActionButton(title: "Settings", systemImage: "slider.horizontal.3") {
+                DashboardActionButton(title: L10n.text("Settings"), systemImage: "slider.horizontal.3") {
                     showSettings = true
                 }
             }
@@ -207,8 +207,8 @@ struct DashboardView: View {
 
             if viewModel.recommendations.isEmpty {
                 EmptyStateView(
-                    title: "No suggestions yet",
-                    message: "Add a few pantry items or recipes to unlock local meal recommendations.",
+                    title: L10n.text("No suggestions yet"),
+                    message: L10n.text("Add a few pantry items or recipes to unlock local meal recommendations."),
                     systemImage: "sparkles"
                 )
             } else {
@@ -270,8 +270,8 @@ private struct SuggestedMealCard: View {
 
             HStack(spacing: 12) {
                 Label(recommendation.matchSummary, systemImage: "checkmark.circle")
-                Label("\(recommendation.recipe.prepTimeMinutes) min", systemImage: "timer")
-                Label(recommendation.recipe.estimatedCost.currencyText, systemImage: "dollarsign.circle")
+                Label(L10n.minutes(recommendation.recipe.prepTimeMinutes), systemImage: "timer")
+                Label(recommendation.recipe.estimatedCost.currencyText, systemImage: MealMapSymbols.cost)
             }
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -279,10 +279,10 @@ private struct SuggestedMealCard: View {
             if recommendation.expiringIngredientCount > 0 || recommendation.canBeMadeWithWhatIHave {
                 HStack(spacing: 8) {
                     if recommendation.expiringIngredientCount > 0 {
-                        TagChipView(title: "Uses expiring items")
+                        TagChipView(title: L10n.text("Uses expiring items"))
                     }
                     if recommendation.canBeMadeWithWhatIHave {
-                        TagChipView(title: "Ready now")
+                        TagChipView(title: L10n.text("Ready now"))
                     }
                 }
             }

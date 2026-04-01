@@ -23,18 +23,18 @@ struct OnboardingView: View {
 
                 VStack(spacing: 14) {
                     OnboardingFeatureRow(
-                        title: "Pantry-aware suggestions",
-                        detail: "Recipes are ranked by what you already own and what should be used soon.",
+                        title: L10n.text("Pantry-aware suggestions"),
+                        detail: L10n.text("Recipes are ranked by what you already own and what should be used soon."),
                         systemImage: "cabinet"
                     )
                     OnboardingFeatureRow(
-                        title: "Budget-friendly planning",
-                        detail: "Keep lower-cost recipes front and center while building the week.",
-                        systemImage: "dollarsign.circle"
+                        title: L10n.text("Budget-friendly planning"),
+                        detail: L10n.text("Keep lower-cost recipes front and center while building the week."),
+                        systemImage: MealMapSymbols.cost
                     )
                     OnboardingFeatureRow(
-                        title: "Clean shopping list",
-                        detail: "Only missing or insufficient ingredients are added, with duplicate items merged.",
+                        title: L10n.text("Clean shopping list"),
+                        detail: L10n.text("Only missing or insufficient ingredients are added, with duplicate items merged."),
                         systemImage: "cart"
                     )
                 }

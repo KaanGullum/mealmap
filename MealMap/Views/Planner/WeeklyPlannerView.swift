@@ -25,14 +25,14 @@ struct WeeklyPlannerView: View {
 
                     HStack(spacing: 12) {
                         SummaryMetricCard(
-                            title: "Planned Meals",
+                            title: L10n.text("Planned Meals"),
                             value: "\(mealPlanEntries.count)",
                             systemImage: "calendar"
                         )
                         SummaryMetricCard(
-                            title: "Weekly Cost",
+                            title: L10n.text("Weekly Cost"),
                             value: viewModel.weeklyEstimatedCost(entries: mealPlanEntries, recipes: recipes).currencyText,
-                            systemImage: "dollarsign.circle"
+                            systemImage: MealMapSymbols.cost
                         )
                     }
                 }
@@ -136,10 +136,10 @@ struct WeeklyPlannerView: View {
                 in: modelContext
             )
             shoppingListMessage = count == 0
-                ? "Everything needed for your planned meals is already in the pantry."
-                : "\(count) missing items were added to the shopping list."
+                ? L10n.text("Everything needed for your planned meals is already in the pantry.")
+                : L10n.addedMissingItems(count)
         } catch {
-            shoppingListMessage = "Unable to generate the shopping list right now."
+            shoppingListMessage = L10n.text("Unable to generate the shopping list right now.")
         }
     }
 }
