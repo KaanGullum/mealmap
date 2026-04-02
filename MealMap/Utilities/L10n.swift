@@ -2,16 +2,23 @@ import Foundation
 
 enum L10n {
     static let supportedLocaleIdentifiers = ["en", "tr"]
+    static let appLanguagePreferenceKey = "appLanguagePreference"
 
-    static var currentSupportedLocaleIdentifier: String {
+    static var systemSupportedLocaleIdentifier: String {
         supportedLocaleIdentifier(
             Bundle.main.preferredLocalizations.first
                 ?? Locale.autoupdatingCurrent.language.languageCode?.identifier
         )
     }
 
+    static var currentSupportedLocaleIdentifier: String {
+        AppLanguagePreference(rawValue: UserDefaults.standard.string(forKey: appLanguagePreferenceKey) ?? AppLanguagePreference.system.rawValue)?
+            .resolvedLocaleIdentifier
+            ?? systemSupportedLocaleIdentifier
+    }
+
     static func text(_ key: String) -> String {
-        NSLocalizedString(key, comment: "")
+        text(key, localeIdentifier: currentSupportedLocaleIdentifier)
     }
 
     static func text(_ key: String, localeIdentifier: String) -> String {
@@ -52,7 +59,11 @@ enum L10n {
     }
 
     static func format(_ key: String, _ arguments: CVarArg...) -> String {
-        String(format: text(key), locale: .autoupdatingCurrent, arguments: arguments)
+        String(
+            format: text(key),
+            locale: Locale(identifier: currentSupportedLocaleIdentifier),
+            arguments: arguments
+        )
     }
 
     static func readyIngredients(matched: Int, total: Int) -> String {
@@ -93,5 +104,61 @@ enum L10n {
 
     static func addedMissingItems(_ count: Int) -> String {
         format("%d missing items were added to the shopping list.", Int32(count))
+    }
+
+    static func servings(_ value: Int) -> String {
+        format("%d servings", Int32(value))
+    }
+
+    static func repeatCount(_ value: Int) -> String {
+        format("Planned %d times", Int32(value))
+    }
+
+    static func substitutionHeader(_ ingredientName: String) -> String {
+        format("Try these instead of %@", ingredientName)
+    }
+
+    static func leftoverSourceSummary(
+        mealType: String,
+        dateText: String,
+        servings: Int
+    ) -> String {
+        format("%1$@ • %2$@ • %3$d servings", mealType, dateText, Int32(servings))
+    }
+
+    static func leftoverAvailableSummary(
+        mealType: String,
+        dateText: String,
+        servings: Int
+    ) -> String {
+        format("%1$@ • %2$@ • %3$d servings left", mealType, dateText, Int32(servings))
+    }
+
+    static func leftoverFromEntry(
+        recipeTitle: String,
+        mealType: String,
+        dateText: String
+    ) -> String {
+        format("Leftovers from %1$@ (%2$@ • %3$@)", recipeTitle, mealType, dateText)
+    }
+
+    static func budgetRemainingStatus(_ amountText: String) -> String {
+        format("%@ left in this week's meal budget.", amountText)
+    }
+
+    static func budgetOverStatus(_ amountText: String) -> String {
+        format("%@ over this week's meal budget.", amountText)
+    }
+
+    static func dashboardBudgetStatus(_ spentText: String, remainingText: String) -> String {
+        format("You've planned %1$@ so far and still have %2$@ left.", spentText, remainingText)
+    }
+
+    static func dashboardBudgetOverStatus(_ spentText: String, overAmountText: String) -> String {
+        format("You've planned %1$@ so far and are %2$@ over budget.", spentText, overAmountText)
+    }
+
+    static func budgetCapValue(_ amountText: String) -> String {
+        format("Weekly cap: %@", amountText)
     }
 }

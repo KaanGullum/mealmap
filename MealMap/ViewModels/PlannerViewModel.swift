@@ -14,9 +14,14 @@ struct PlannerSelectionContext: Identifiable {
 @MainActor
 final class PlannerViewModel: ObservableObject {
     private let shoppingListGenerator: ShoppingListGenerating
+    private let metricsService: MealPlanMetricsService
 
-    init(shoppingListGenerator: ShoppingListGenerating) {
+    init(
+        shoppingListGenerator: ShoppingListGenerating,
+        metricsService: MealPlanMetricsService = MealPlanMetricsService()
+    ) {
         self.shoppingListGenerator = shoppingListGenerator
+        self.metricsService = metricsService
     }
 
     convenience init() {
@@ -51,14 +56,73 @@ final class PlannerViewModel: ObservableObject {
         for date: Date,
         mealType: MealType,
         existingEntries: [MealPlanEntry],
+        servings: Int? = nil,
         in context: ModelContext
     ) throws {
+        let plannedServings = max(servings ?? recipe.defaultServings, 1)
+
         if let existingEntry = entry(for: date, mealType: mealType, entries: existingEntries) {
             existingEntry.recipeID = recipe.id
+            existingEntry.servings = plannedServings
+            existingEntry.leftoversSourceEntryID = nil
         } else {
-            context.insert(MealPlanEntry(date: date, mealType: mealType, recipeID: recipe.id))
+            context.insert(
+                MealPlanEntry(
+                    date: date,
+                    mealType: mealType,
+                    recipeID: recipe.id,
+                    servings: plannedServings
+                )
+            )
         }
 
+        try context.save()
+    }
+
+    func assignLeftovers(
+        from sourceEntry: MealPlanEntry,
+        for date: Date,
+        mealType: MealType,
+        recipes: [Recipe],
+        existingEntries: [MealPlanEntry],
+        in context: ModelContext
+    ) throws {
+        let existingEntry = entry(for: date, mealType: mealType, entries: existingEntries)
+        let entriesExcludingCurrent = existingEntries.filter { $0.id != existingEntry?.id }
+        let recipe = recipes.first(where: { $0.id == sourceEntry.recipeID })
+        let remainingServings = metricsService.remainingLeftoverServings(
+            for: sourceEntry,
+            entries: entriesExcludingCurrent
+        )
+        let defaultLeftoverServings = max(1, sourceEntry.servings / 2)
+        let cappedByRecipe = min(defaultLeftoverServings, recipe?.defaultServings ?? defaultLeftoverServings)
+        let plannedServings = max(1, min(cappedByRecipe, remainingServings))
+
+        if let existingEntry {
+            existingEntry.recipeID = sourceEntry.recipeID
+            existingEntry.servings = plannedServings
+            existingEntry.leftoversSourceEntryID = sourceEntry.id
+        } else {
+            context.insert(
+                MealPlanEntry(
+                    date: date,
+                    mealType: mealType,
+                    recipeID: sourceEntry.recipeID,
+                    servings: plannedServings,
+                    leftoversSourceEntryID: sourceEntry.id
+                )
+            )
+        }
+
+        try context.save()
+    }
+
+    func updateServings(
+        for entry: MealPlanEntry,
+        servings: Int,
+        in context: ModelContext
+    ) throws {
+        entry.servings = max(servings, 1)
         try context.save()
     }
 
@@ -77,10 +141,67 @@ final class PlannerViewModel: ObservableObject {
     }
 
     func weeklyEstimatedCost(entries: [MealPlanEntry], recipes: [Recipe]) -> Double {
-        let recipeByID = Dictionary(uniqueKeysWithValues: recipes.map { ($0.id, $0) })
-        return entries.reduce(0) { partialResult, entry in
-            partialResult + (recipeByID[entry.recipeID]?.estimatedCost ?? 0)
+        metricsService.weeklyEstimatedCost(entries: entries, recipes: recipes)
+    }
+
+    func remainingBudget(
+        budgetLimit: Double,
+        entries: [MealPlanEntry],
+        recipes: [Recipe]
+    ) -> Double {
+        metricsService.remainingBudget(
+            budgetLimit: budgetLimit,
+            entries: entries,
+            recipes: recipes
+        )
+    }
+
+    func plannedCost(for entry: MealPlanEntry, recipe: Recipe?) -> Double {
+        guard
+            let recipe,
+            metricsService.isFreshCookEntry(entry)
+        else {
+            return 0
         }
+
+        return recipe.estimatedCost * metricsService.ingredientMultiplier(for: entry, recipe: recipe)
+    }
+
+    func isLeftoverEntry(_ entry: MealPlanEntry) -> Bool {
+        metricsService.isFreshCookEntry(entry) == false
+    }
+
+    func servings(for entry: MealPlanEntry, recipe: Recipe?) -> Int {
+        guard let recipe else {
+            return max(entry.servings, 1)
+        }
+
+        return metricsService.servings(for: entry, recipe: recipe)
+    }
+
+    func leftoverSource(
+        for entry: MealPlanEntry,
+        entries: [MealPlanEntry]
+    ) -> MealPlanEntry? {
+        guard let leftoversSourceEntryID = entry.leftoversSourceEntryID else {
+            return nil
+        }
+
+        return entries.first(where: { $0.id == leftoversSourceEntryID })
+    }
+
+    func leftoverCandidates(
+        for date: Date,
+        entries: [MealPlanEntry]
+    ) -> [MealPlanEntry] {
+        metricsService.eligibleLeftoverSources(for: date, entries: entries)
+    }
+
+    func remainingLeftoverServings(
+        for sourceEntry: MealPlanEntry,
+        entries: [MealPlanEntry]
+    ) -> Int {
+        metricsService.remainingLeftoverServings(for: sourceEntry, entries: entries)
     }
 
     func generateShoppingList(

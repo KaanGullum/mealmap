@@ -29,6 +29,8 @@ final class RecipeFormViewModel: ObservableObject {
     @Published var tagsText = ""
     @Published var estimatedCost = 5.0
     @Published var prepTimeMinutes = 20
+    @Published var defaultServings = 2
+    @Published var isFavorite = false
     @Published var ingredientDrafts: [EditableRecipeIngredient] = [
         EditableRecipeIngredient(),
         EditableRecipeIngredient()
@@ -76,7 +78,9 @@ final class RecipeFormViewModel: ObservableObject {
             instructions: instructions.trimmingCharacters(in: .whitespacesAndNewlines),
             tags: tags,
             estimatedCost: estimatedCost,
-            prepTimeMinutes: prepTimeMinutes
+            prepTimeMinutes: prepTimeMinutes,
+            defaultServings: max(defaultServings, 1),
+            isFavorite: isFavorite
         )
 
         context.insert(recipe)

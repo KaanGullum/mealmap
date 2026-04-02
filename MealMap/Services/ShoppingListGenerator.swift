@@ -11,6 +11,8 @@ protocol ShoppingListGenerating {
 
 @MainActor
 struct ShoppingListGenerator: ShoppingListGenerating {
+    private let metricsService = MealPlanMetricsService()
+
     func generate(
         pantryItems: [PantryItem],
         plannedEntries: [MealPlanEntry],
@@ -20,13 +22,18 @@ struct ShoppingListGenerator: ShoppingListGenerating {
         var requiredQuantities: [ShoppingListKey: Double] = [:]
 
         for entry in plannedEntries {
-            guard let recipe = recipeByID[entry.recipeID] else {
+            guard
+                metricsService.isFreshCookEntry(entry),
+                let recipe = recipeByID[entry.recipeID]
+            else {
                 continue
             }
 
+            let multiplier = metricsService.ingredientMultiplier(for: entry, recipe: recipe)
+
             for ingredient in recipe.ingredients {
                 let key = ShoppingListKey(name: ingredient.ingredientName, unit: ingredient.unit)
-                requiredQuantities[key, default: 0] += ingredient.quantity
+                requiredQuantities[key, default: 0] += ingredient.quantity * multiplier
             }
         }
 

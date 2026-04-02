@@ -42,6 +42,17 @@ struct SampleRecipeDefinition {
     let tagKeys: [String]
     let estimatedCost: Double
     let prepTimeMinutes: Int
+    let defaultServings: Int
+    let isFavorite: Bool
+}
+
+struct SampleMealPlanEntryDefinition {
+    let id: UUID
+    let dateIndex: Int
+    let mealType: MealType
+    let recipeID: UUID
+    let servings: Int
+    let leftoversSourceEntryID: UUID?
 }
 
 enum SampleDataFactory {
@@ -80,7 +91,9 @@ enum SampleDataFactory {
             ],
             tagKeys: ["Quick", "Vegetarian", "Budget"],
             estimatedCost: 6.50,
-            prepTimeMinutes: 20
+            prepTimeMinutes: 20,
+            defaultServings: 4,
+            isFavorite: true
         ),
         SampleRecipeDefinition(
             id: sampleID("5EED1000-0000-0000-0000-000000000002"),
@@ -100,7 +113,9 @@ enum SampleDataFactory {
             ],
             tagKeys: ["Meal Prep", "Budget", "High Protein"],
             estimatedCost: 5.25,
-            prepTimeMinutes: 25
+            prepTimeMinutes: 25,
+            defaultServings: 3,
+            isFavorite: true
         ),
         SampleRecipeDefinition(
             id: sampleID("5EED1000-0000-0000-0000-000000000003"),
@@ -120,7 +135,9 @@ enum SampleDataFactory {
             ],
             tagKeys: ["Quick", "Budget", "Use What You Have"],
             estimatedCost: 4.75,
-            prepTimeMinutes: 18
+            prepTimeMinutes: 18,
+            defaultServings: 2,
+            isFavorite: false
         ),
         SampleRecipeDefinition(
             id: sampleID("5EED1000-0000-0000-0000-000000000004"),
@@ -139,7 +156,9 @@ enum SampleDataFactory {
             ],
             tagKeys: ["Breakfast", "Quick"],
             estimatedCost: 3.90,
-            prepTimeMinutes: 15
+            prepTimeMinutes: 15,
+            defaultServings: 2,
+            isFavorite: false
         ),
         SampleRecipeDefinition(
             id: sampleID("5EED1000-0000-0000-0000-000000000005"),
@@ -159,7 +178,9 @@ enum SampleDataFactory {
             ],
             tagKeys: ["Budget", "Meal Prep", "Comfort Food"],
             estimatedCost: 5.10,
-            prepTimeMinutes: 22
+            prepTimeMinutes: 22,
+            defaultServings: 4,
+            isFavorite: true
         ),
         SampleRecipeDefinition(
             id: sampleID("5EED1000-0000-0000-0000-000000000006"),
@@ -176,7 +197,44 @@ enum SampleDataFactory {
             ],
             tagKeys: ["Breakfast", "Quick"],
             estimatedCost: 4.40,
-            prepTimeMinutes: 5
+            prepTimeMinutes: 5,
+            defaultServings: 2,
+            isFavorite: false
+        ),
+    ]
+
+    static let mealPlanEntryDefinitions: [SampleMealPlanEntryDefinition] = [
+        SampleMealPlanEntryDefinition(
+            id: sampleID("5EED2000-0000-0000-0000-000000000001"),
+            dateIndex: 0,
+            mealType: .dinner,
+            recipeID: sampleID("5EED1000-0000-0000-0000-000000000001"),
+            servings: 4,
+            leftoversSourceEntryID: nil
+        ),
+        SampleMealPlanEntryDefinition(
+            id: sampleID("5EED2000-0000-0000-0000-000000000002"),
+            dateIndex: 1,
+            mealType: .lunch,
+            recipeID: sampleID("5EED1000-0000-0000-0000-000000000001"),
+            servings: 2,
+            leftoversSourceEntryID: sampleID("5EED2000-0000-0000-0000-000000000001")
+        ),
+        SampleMealPlanEntryDefinition(
+            id: sampleID("5EED2000-0000-0000-0000-000000000003"),
+            dateIndex: 2,
+            mealType: .dinner,
+            recipeID: sampleID("5EED1000-0000-0000-0000-000000000003"),
+            servings: 2,
+            leftoversSourceEntryID: nil
+        ),
+        SampleMealPlanEntryDefinition(
+            id: sampleID("5EED2000-0000-0000-0000-000000000004"),
+            dateIndex: 4,
+            mealType: .dinner,
+            recipeID: sampleID("5EED1000-0000-0000-0000-000000000005"),
+            servings: 4,
+            leftoversSourceEntryID: nil
         ),
     ]
 
@@ -203,11 +261,16 @@ enum SampleDataFactory {
         let recipes = sampleRecipes(localeIdentifier: localeIdentifier)
 
         let weekDates = WeekDateProvider.currentWeekDates(referenceDate: referenceDate)
-        let mealPlanEntries = [
-            MealPlanEntry(date: weekDates[0], mealType: .dinner, recipeID: recipes[0].id),
-            MealPlanEntry(date: weekDates[1], mealType: .lunch, recipeID: recipes[2].id),
-            MealPlanEntry(date: weekDates[3], mealType: .dinner, recipeID: recipes[4].id),
-        ]
+        let mealPlanEntries = mealPlanEntryDefinitions.map { definition in
+            MealPlanEntry(
+                id: definition.id,
+                date: weekDates[definition.dateIndex],
+                mealType: definition.mealType,
+                recipeID: definition.recipeID,
+                servings: definition.servings,
+                leftoversSourceEntryID: definition.leftoversSourceEntryID
+            )
+        }
 
         return AppSeedData(
             pantryItems: pantryItems,
@@ -256,7 +319,9 @@ enum SampleDataFactory {
                     .joined(separator: "\n"),
                 tags: definition.tagKeys.map { localized($0, localeIdentifier: localeIdentifier) },
                 estimatedCost: definition.estimatedCost,
-                prepTimeMinutes: definition.prepTimeMinutes
+                prepTimeMinutes: definition.prepTimeMinutes,
+                defaultServings: definition.defaultServings,
+                isFavorite: definition.isFavorite
             )
         }
     }

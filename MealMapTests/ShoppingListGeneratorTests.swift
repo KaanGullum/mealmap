@@ -77,4 +77,97 @@ final class ShoppingListGeneratorTests: XCTestCase {
 
         XCTAssertTrue(results.isEmpty)
     }
+
+    func testGeneratorScalesIngredientsByPlannedServingsAndSkipsLeftovers() {
+        let generator = ShoppingListGenerator()
+        let pantry: [PantryItem] = []
+
+        let pastaBake = Recipe(
+            title: "Pasta Bake",
+            summary: "Scaled by servings.",
+            ingredients: [
+                RecipeIngredient(ingredientName: "Pasta", quantity: 200, unit: .gram),
+                RecipeIngredient(ingredientName: "Cheddar", quantity: 2, unit: .slice),
+            ],
+            instructions: "Bake it.",
+            tags: ["Dinner"],
+            estimatedCost: 8,
+            prepTimeMinutes: 30,
+            defaultServings: 2
+        )
+
+        let freshCookEntry = MealPlanEntry(
+            date: .now,
+            mealType: .dinner,
+            recipeID: pastaBake.id,
+            servings: 4
+        )
+
+        let leftoverEntry = MealPlanEntry(
+            date: Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now,
+            mealType: .lunch,
+            recipeID: pastaBake.id,
+            servings: 2,
+            leftoversSourceEntryID: freshCookEntry.id
+        )
+
+        let results = generator.generate(
+            pantryItems: pantry,
+            plannedEntries: [freshCookEntry, leftoverEntry],
+            recipes: [pastaBake]
+        )
+
+        XCTAssertEqual(results.first(where: { $0.name == "Pasta" })?.quantity, 400)
+        XCTAssertEqual(results.first(where: { $0.name == "Cheddar" })?.quantity, 4)
+        XCTAssertEqual(results.count, 2)
+    }
+
+    func testRemainingLeftoverServingsTrackWhatHasAlreadyBeenReused() {
+        let metrics = MealPlanMetricsService()
+        let sourceEntry = MealPlanEntry(
+            date: .now,
+            mealType: .dinner,
+            recipeID: UUID(),
+            servings: 4
+        )
+
+        let reusedEntry = MealPlanEntry(
+            date: Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now,
+            mealType: .lunch,
+            recipeID: sourceEntry.recipeID,
+            servings: 2,
+            leftoversSourceEntryID: sourceEntry.id
+        )
+
+        XCTAssertEqual(
+            metrics.remainingLeftoverServings(for: sourceEntry, entries: [sourceEntry, reusedEntry]),
+            2
+        )
+    }
+
+    func testEligibleLeftoverSourcesSkipMealsWithNoServingsLeft() {
+        let metrics = MealPlanMetricsService()
+        let sourceEntry = MealPlanEntry(
+            date: .now,
+            mealType: .dinner,
+            recipeID: UUID(),
+            servings: 2
+        )
+
+        let reusedEntry = MealPlanEntry(
+            date: Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now,
+            mealType: .lunch,
+            recipeID: sourceEntry.recipeID,
+            servings: 2,
+            leftoversSourceEntryID: sourceEntry.id
+        )
+
+        let targetDate = Calendar.current.date(byAdding: .day, value: 2, to: .now) ?? .now
+        let candidates = metrics.eligibleLeftoverSources(
+            for: targetDate,
+            entries: [sourceEntry, reusedEntry]
+        )
+
+        XCTAssertTrue(candidates.isEmpty)
+    }
 }

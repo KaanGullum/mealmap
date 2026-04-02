@@ -19,12 +19,14 @@ final class RecipesViewModel: ObservableObject {
     func refresh(
         recipes: [Recipe],
         pantryItems: [PantryItem],
+        plannedEntries: [MealPlanEntry],
         budgetFriendlyMode: Bool,
         onlyUsePantryItems: Bool
     ) async {
         recommendations = await recommendationService.recommend(
             recipes: recipes,
             pantryItems: pantryItems,
+            plannedEntries: plannedEntries,
             budgetFriendlyMode: budgetFriendlyMode,
             onlyUsePantryItems: onlyUsePantryItems
         )

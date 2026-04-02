@@ -86,6 +86,11 @@ struct SampleDataLocalizationSynchronizer {
                 didChange = true
             }
 
+            if recipe.defaultServings != definition.defaultServings {
+                recipe.defaultServings = definition.defaultServings
+                didChange = true
+            }
+
             didChange = synchronizeRecipeIngredients(recipe.ingredients, definition: definition) || didChange
         }
 

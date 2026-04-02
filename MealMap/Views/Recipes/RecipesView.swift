@@ -5,6 +5,7 @@ struct RecipesView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Recipe.title) private var recipes: [Recipe]
     @Query(sort: \PantryItem.name) private var pantryItems: [PantryItem]
+    @Query(sort: \MealPlanEntry.date) private var mealPlanEntries: [MealPlanEntry]
     @StateObject private var viewModel = RecipesViewModel()
     @State private var showAddRecipe = false
     @AppStorage("budgetFriendlyMode") private var budgetFriendlyMode = false
@@ -42,6 +43,15 @@ struct RecipesView: View {
                             RecipeListRow(recommendation: recommendation)
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button {
+                                toggleFavorite(recommendation.recipe)
+                            } label: {
+                                Label(
+                                    L10n.text(recommendation.recipe.isFavorite ? "Unfavorite" : "Favorite"),
+                                    systemImage: recommendation.recipe.isFavorite ? "star.slash" : "star"
+                                )
+                            }
+                            .tint(.yellow)
                             Button("Delete", role: .destructive) {
                                 delete(recommendation.recipe)
                             }
@@ -71,6 +81,7 @@ struct RecipesView: View {
             await viewModel.refresh(
                 recipes: recipes,
                 pantryItems: pantryItems,
+                plannedEntries: mealPlanEntries,
                 budgetFriendlyMode: budgetFriendlyMode,
                 onlyUsePantryItems: showOnlyAvailableRecipes
             )
@@ -83,7 +94,7 @@ struct RecipesView: View {
 
     private var refreshKey: String {
         let recipesKey = recipes.map { recipe in
-            "\(recipe.id.uuidString)-\(recipe.ingredients.count)-\(recipe.estimatedCost)"
+            "\(recipe.id.uuidString)-\(recipe.ingredients.count)-\(recipe.estimatedCost)-\(recipe.defaultServings)-\(recipe.isFavorite)"
         }
         .joined(separator: "|")
 
@@ -92,12 +103,22 @@ struct RecipesView: View {
         }
         .joined(separator: "|")
 
-        return [recipesKey, pantryKey, "\(budgetFriendlyMode)", "\(showOnlyAvailableRecipes)"]
+        let mealPlanKey = mealPlanEntries.map { entry in
+            "\(entry.id.uuidString)-\(entry.recipeID.uuidString)-\(entry.servings)-\(entry.leftoversSourceEntryID?.uuidString ?? "none")"
+        }
+        .joined(separator: "|")
+
+        return [recipesKey, pantryKey, mealPlanKey, "\(budgetFriendlyMode)", "\(showOnlyAvailableRecipes)"]
             .joined(separator: "#")
     }
 
     private func delete(_ recipe: Recipe) {
         modelContext.delete(recipe)
+        try? modelContext.save()
+    }
+
+    private func toggleFavorite(_ recipe: Recipe) {
+        recipe.isFavorite.toggle()
         try? modelContext.save()
     }
 }
@@ -118,12 +139,19 @@ private struct RecipeListRow: View {
                 }
 
                 Spacer()
-                MatchScoreBadgeView(score: recommendation.matchScore)
+                VStack(alignment: .trailing, spacing: 8) {
+                    if recommendation.recipe.isFavorite {
+                        Image(systemName: "star.fill")
+                            .foregroundStyle(.yellow)
+                    }
+                    MatchScoreBadgeView(score: recommendation.matchScore)
+                }
             }
 
             HStack(spacing: 12) {
                 Label(recommendation.recipe.estimatedCost.currencyText, systemImage: MealMapSymbols.cost)
                 Label(L10n.minutes(recommendation.recipe.prepTimeMinutes), systemImage: "timer")
+                Label(L10n.servings(recommendation.recipe.defaultServings), systemImage: "person.2")
                 Label(recommendation.matchSummary, systemImage: "checkmark.circle")
             }
             .font(.caption)
@@ -135,6 +163,17 @@ private struct RecipeListRow: View {
                         ForEach(recommendation.recipe.tags, id: \.self) { tag in
                             TagChipView(title: tag)
                         }
+                    }
+                }
+            }
+
+            if recommendation.recipe.isFavorite || recommendation.timesPlanned > 0 {
+                HStack(spacing: 8) {
+                    if recommendation.recipe.isFavorite {
+                        TagChipView(title: L10n.text("Favorite"))
+                    }
+                    if recommendation.timesPlanned > 0 {
+                        TagChipView(title: L10n.repeatCount(recommendation.timesPlanned))
                     }
                 }
             }

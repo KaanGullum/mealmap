@@ -4,6 +4,12 @@
 "Planner" = "Planlayıcı";
 "Shopping" = "Alışveriş";
 "Settings" = "Ayarlar";
+"Language" = "Dil";
+"App Language" = "Uygulama Dili";
+"Follow System" = "Sistemi Takip Et";
+"English" = "İngilizce";
+"Turkish" = "Türkçe";
+"Choose whether MealMap follows your iPhone language or always stays in English or Turkish." = "MealMap'in iPhone dilinizi takip etmesini ya da her zaman İngilizce veya Türkçe kalmasını seçin.";
 
 "Cook more from what you already have." = "Elindekilerle daha fazla pişir.";
 
@@ -204,3 +210,61 @@
 "High Protein" = "Yüksek Protein";
 "Use What You Have" = "Elindekileri Kullan";
 "Comfort Food" = "Konfor Yemeği";
+
+"%d servings" = "%d porsiyon";
+"Planned %d times" = "%d kez planlandı";
+"Try these instead of %@" = "%@ yerine bunları deneyin";
+"%1$@ • %2$@ • %3$d servings" = "%1$@ • %2$@ • %3$d porsiyon";
+"%1$@ • %2$@ • %3$d servings left" = "%1$@ • %2$@ • %3$d porsiyon kaldı";
+"Leftovers from %1$@ (%2$@ • %3$@)" = "%1$@ yemeğinin artanı (%2$@ • %3$@)";
+"%@ left in this week's meal budget." = "Bu haftaki yemek bütçesinde %@ kaldı.";
+"%@ over this week's meal budget." = "Bu haftaki yemek bütçesi %@ aşıldı.";
+"You've planned %1$@ so far and still have %2$@ left." = "Şu ana kadar %1$@ planladınız ve hâlâ %2$@ kaldı.";
+"You've planned %1$@ so far and are %2$@ over budget." = "Şu ana kadar %1$@ planladınız ve bütçeyi %2$@ aştınız.";
+"Weekly cap: %@" = "Haftalık limit: %@";
+
+"Budget Guardrails" = "Bütçe Sınırları";
+"Enable weekly budget cap" = "Haftalık bütçe limitini etkinleştir";
+"Budget Remaining" = "Kalan Bütçe";
+"Budget Cap" = "Bütçe Limiti";
+"Low Stock" = "Azalanlar";
+"Restock soon" = "Yakında yenile";
+"No low-stock items" = "Azalan ürün yok";
+"Your pantry quantities still look healthy. As items get lower, they will appear here." = "Kiler miktarları hâlâ iyi görünüyor. Ürünler azaldıkça burada görünecek.";
+"Use leftovers" = "Artanları kullan";
+"Uses leftovers" = "Artanları kullanır";
+"Favorites & repeats" = "Favoriler ve tekrarlar";
+"Leftovers" = "Artanlar";
+"Smart swaps" = "Akıllı alternatifler";
+"Favorite" = "Favori";
+"Unfavorite" = "Favoriden çıkar";
+"Mark as favorite" = "Favori olarak işaretle";
+
+"Labneh" = "Labne";
+"Sour Cream" = "Ekşi Krema";
+"Arugula" = "Roka";
+"Kale" = "Kıvırcık Lahana";
+"Mozzarella" = "Mozzarella";
+"Kashar Cheese" = "Kaşar Peyniri";
+"Oat Milk" = "Yulaf Sütü";
+"Water and Butter" = "Su ve Tereyağı";
+"Canned Tomatoes" = "Konserve Domates";
+"Roasted Red Peppers" = "Közlenmiş Kırmızı Biber";
+"Tortilla" = "Tortilla";
+"Pita" = "Pide";
+"Kidney Beans" = "Barbunya";
+
+"Similar tangy dairy option for bowls and sauces." = "Kaseler ve soslar için benzer ekşimsi süt ürünü alternatifi.";
+"Works as a creamy topping in the same amount." = "Aynı miktarda kremamsı bir üst malzeme olarak çalışır.";
+"Peppery leafy swap that cooks down quickly." = "Hızlı yumuşayan, hafif biberimsi yapraklı bir alternatif.";
+"Use a little longer cooking time for a sturdier green." = "Daha dayanıklı bir yeşillik olduğu için biraz daha uzun pişirin.";
+"Melts well with a milder flavor." = "Daha yumuşak bir tatla iyi erir.";
+"Great local swap for toast, pasta, and skillets." = "Tost, makarna ve tava yemekleri için iyi bir yerel alternatif.";
+"Keeps sauces creamy with a neutral flavor." = "Sosları nötr bir tatla kremamsı tutar.";
+"Use a little butter to replace richness in cooked dishes." = "Pişen yemeklerde zenginliği geri vermek için biraz tereyağı kullanın.";
+"Best cooked swap for sauces, bowls, and skillets." = "Soslar, kaseler ve tava yemekleri için en iyi pişmiş alternatif.";
+"Adds sweetness and acidity in warm dishes." = "Sıcak yemeklere tatlılık ve asidite katar.";
+"Easy base for wraps, melts, and skillet breakfasts." = "Wrap, melt ve tavada yapılan kahvaltılar için kolay bir taban.";
+"Great for toast-style toppings and grain bowls." = "Tost benzeri sunumlar ve tahıl kaseleri için idealdir.";
+"Same canned-bean role in rice bowls and skillets." = "Pirinç kaseleri ve tava yemeklerinde aynı konserve fasulye rolünü üstlenir.";
+"Slightly firmer but still pantry friendly." = "Biraz daha diri yapılıdır ama hâlâ kiler dostudur.";

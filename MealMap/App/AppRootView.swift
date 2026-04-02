@@ -4,6 +4,7 @@ import SwiftUI
 struct AppRootView: View {
     @Environment(\.modelContext) private var modelContext
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @AppStorage(L10n.appLanguagePreferenceKey) private var appLanguagePreferenceRawValue = AppLanguagePreference.system.rawValue
     @State private var hasPreparedApp = false
     @State private var isShowingSplash = true
 
@@ -26,9 +27,17 @@ struct AppRootView: View {
                     .transition(.opacity.combined(with: .scale(scale: 1.02)))
             }
         }
+        .environment(\.locale, appLanguagePreference.locale)
         .task {
             await prepareApp()
         }
+        .task(id: appLanguagePreferenceRawValue) {
+            await synchronizeLocalizedContent()
+        }
+    }
+
+    private var appLanguagePreference: AppLanguagePreference {
+        AppLanguagePreference(rawValue: appLanguagePreferenceRawValue) ?? .system
     }
 
     @MainActor
@@ -46,6 +55,18 @@ struct AppRootView: View {
         withAnimation(.easeInOut(duration: 0.45)) {
             isShowingSplash = false
         }
+    }
+
+    @MainActor
+    private func synchronizeLocalizedContent() async {
+        guard hasPreparedApp else {
+            return
+        }
+
+        SampleDataLocalizationSynchronizer(
+            localeIdentifier: appLanguagePreference.resolvedLocaleIdentifier
+        )
+        .synchronize(in: modelContext)
     }
 
     private func waitMinimumSplashDuration(since startDate: Date) async {

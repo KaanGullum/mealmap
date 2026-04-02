@@ -8,6 +8,9 @@ struct RecipeRecommendation: Identifiable {
     let expiringIngredientCount: Int
     let missingIngredients: [RecipeIngredient]
     let budgetBoostApplied: Bool
+    let favoriteBoostApplied: Bool
+    let repeatBoostApplied: Bool
+    let timesPlanned: Int
 
     var id: UUID { recipe.id }
 
@@ -43,4 +46,5 @@ struct PantrySummary {
     let totalItems: Int
     let stapleItems: Int
     let expiringSoonItems: Int
+    let lowStockItems: Int
 }

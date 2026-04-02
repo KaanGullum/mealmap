@@ -11,6 +11,8 @@ final class Recipe: Identifiable {
     var tags: [String]
     var estimatedCost: Double
     var prepTimeMinutes: Int
+    var defaultServings: Int = 2
+    var isFavorite: Bool = false
     var createdAt: Date
 
     init(
@@ -22,6 +24,8 @@ final class Recipe: Identifiable {
         tags: [String],
         estimatedCost: Double,
         prepTimeMinutes: Int,
+        defaultServings: Int = 2,
+        isFavorite: Bool = false,
         createdAt: Date = .now
     ) {
         self.id = id
@@ -32,6 +36,8 @@ final class Recipe: Identifiable {
         self.tags = tags
         self.estimatedCost = estimatedCost
         self.prepTimeMinutes = prepTimeMinutes
+        self.defaultServings = defaultServings
+        self.isFavorite = isFavorite
         self.createdAt = createdAt
     }
 }

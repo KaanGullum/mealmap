@@ -135,4 +135,54 @@ final class RecommendationEngineTests: XCTestCase {
         XCTAssertEqual(results.first?.recipe.title, "Spinach Pasta")
         XCTAssertGreaterThan(results.first?.expiringIngredientCount ?? 0, 0)
     }
+
+    func testFavoriteAndRepeatUsageBoostRecommendationOrder() async {
+        let engine = LocalRecommendationEngine()
+        let pantry = [
+            PantryItem(name: "Rice", quantity: 4, unit: .cup, category: .grains),
+        ]
+
+        let favoriteRecipe = Recipe(
+            title: "Favorite Bowl",
+            summary: "Marked as favorite.",
+            ingredients: [
+                RecipeIngredient(ingredientName: "Rice", quantity: 2, unit: .cup),
+            ],
+            instructions: "Cook rice.",
+            tags: ["Quick"],
+            estimatedCost: 5,
+            prepTimeMinutes: 10,
+            isFavorite: true
+        )
+
+        let regularRecipe = Recipe(
+            title: "Regular Bowl",
+            summary: "Not favorited.",
+            ingredients: [
+                RecipeIngredient(ingredientName: "Rice", quantity: 2, unit: .cup),
+            ],
+            instructions: "Cook rice.",
+            tags: ["Quick"],
+            estimatedCost: 5,
+            prepTimeMinutes: 10
+        )
+
+        let plannedEntries = [
+            MealPlanEntry(date: .now, mealType: .lunch, recipeID: favoriteRecipe.id),
+            MealPlanEntry(date: Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now, mealType: .dinner, recipeID: favoriteRecipe.id),
+        ]
+
+        let results = await engine.recommend(
+            recipes: [regularRecipe, favoriteRecipe],
+            pantryItems: pantry,
+            plannedEntries: plannedEntries,
+            budgetFriendlyMode: false,
+            onlyUsePantryItems: false
+        )
+
+        XCTAssertEqual(results.first?.recipe.title, "Favorite Bowl")
+        XCTAssertTrue(results.first?.favoriteBoostApplied == true)
+        XCTAssertTrue(results.first?.repeatBoostApplied == true)
+        XCTAssertEqual(results.first?.timesPlanned, 2)
+    }
 }

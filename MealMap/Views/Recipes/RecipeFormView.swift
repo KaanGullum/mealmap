@@ -16,6 +16,10 @@ struct RecipeFormView: View {
                 Stepper(value: $viewModel.prepTimeMinutes, in: 5...180, step: 5) {
                     Label(L10n.prepTime(viewModel.prepTimeMinutes), systemImage: "timer")
                 }
+                Stepper(value: $viewModel.defaultServings, in: 1...12) {
+                    Label(L10n.servings(viewModel.defaultServings), systemImage: "person.2")
+                }
+                Toggle("Mark as favorite", isOn: $viewModel.isFavorite)
                 TextField("Tags (comma separated)", text: $viewModel.tagsText)
             }
 

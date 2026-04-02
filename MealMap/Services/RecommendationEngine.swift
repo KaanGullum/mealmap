@@ -5,16 +5,37 @@ protocol RecipeRecommendationServicing {
     func recommend(
         recipes: [Recipe],
         pantryItems: [PantryItem],
+        plannedEntries: [MealPlanEntry],
         budgetFriendlyMode: Bool,
         onlyUsePantryItems: Bool
     ) async -> [RecipeRecommendation]
 }
 
-@MainActor
-struct LocalRecommendationEngine: RecipeRecommendationServicing {
+extension RecipeRecommendationServicing {
     func recommend(
         recipes: [Recipe],
         pantryItems: [PantryItem],
+        budgetFriendlyMode: Bool,
+        onlyUsePantryItems: Bool
+    ) async -> [RecipeRecommendation] {
+        await recommend(
+            recipes: recipes,
+            pantryItems: pantryItems,
+            plannedEntries: [],
+            budgetFriendlyMode: budgetFriendlyMode,
+            onlyUsePantryItems: onlyUsePantryItems
+        )
+    }
+}
+
+@MainActor
+struct LocalRecommendationEngine: RecipeRecommendationServicing {
+    private let metricsService = MealPlanMetricsService()
+
+    func recommend(
+        recipes: [Recipe],
+        pantryItems: [PantryItem],
+        plannedEntries: [MealPlanEntry],
         budgetFriendlyMode: Bool,
         onlyUsePantryItems: Bool
     ) async -> [RecipeRecommendation] {
@@ -22,9 +43,16 @@ struct LocalRecommendationEngine: RecipeRecommendationServicing {
 
         let inventory = PantryInventorySnapshot(items: pantryItems)
         let costBaseline = max(recipes.map(\.estimatedCost).max() ?? 1, 1)
+        let usageCounts = metricsService.recipeUsageCounts(entries: plannedEntries)
 
         let recommendations = recipes.compactMap { recipe -> RecipeRecommendation? in
-            let evaluation = evaluate(recipe: recipe, inventory: inventory, costBaseline: costBaseline, budgetFriendlyMode: budgetFriendlyMode)
+            let evaluation = evaluate(
+                recipe: recipe,
+                inventory: inventory,
+                costBaseline: costBaseline,
+                budgetFriendlyMode: budgetFriendlyMode,
+                timesPlanned: usageCounts[recipe.id, default: 0]
+            )
 
             if onlyUsePantryItems, evaluation.missingIngredients.isEmpty == false {
                 return nil
@@ -45,7 +73,8 @@ struct LocalRecommendationEngine: RecipeRecommendationServicing {
         recipe: Recipe,
         inventory: PantryInventorySnapshot,
         costBaseline: Double,
-        budgetFriendlyMode: Bool
+        budgetFriendlyMode: Bool,
+        timesPlanned: Int
     ) -> RecipeRecommendation {
         var matchedIngredients = 0
         var expiringIngredients = 0
@@ -72,7 +101,9 @@ struct LocalRecommendationEngine: RecipeRecommendationServicing {
         let expiringBonus = expiringIngredients * 10
         let completionBonus = missingIngredients.isEmpty ? 15 : 0
         let budgetBonus = budgetFriendlyMode ? Int(((costBaseline - recipe.estimatedCost) / costBaseline) * 20) : 0
-        let totalScore = max(0, coverageScore + expiringBonus + completionBonus + budgetBonus)
+        let favoriteBonus = recipe.isFavorite ? 8 : 0
+        let repeatBonus = min(timesPlanned * 4, 12)
+        let totalScore = max(0, coverageScore + expiringBonus + completionBonus + budgetBonus + favoriteBonus + repeatBonus)
 
         return RecipeRecommendation(
             recipe: recipe,
@@ -81,7 +112,10 @@ struct LocalRecommendationEngine: RecipeRecommendationServicing {
             totalIngredientCount: recipe.ingredients.count,
             expiringIngredientCount: expiringIngredients,
             missingIngredients: missingIngredients,
-            budgetBoostApplied: budgetFriendlyMode
+            budgetBoostApplied: budgetFriendlyMode,
+            favoriteBoostApplied: recipe.isFavorite,
+            repeatBoostApplied: timesPlanned > 0,
+            timesPlanned: timesPlanned
         )
     }
 }
@@ -109,5 +143,9 @@ struct PantryInventorySnapshot {
                 }
                 return expirationDate.isWithinUpcoming(days: days)
             }
+    }
+
+    func hasAnyMatch(for ingredientName: String) -> Bool {
+        groupedItems[ingredientName.normalizedIngredientName, default: []].isEmpty == false
     }
 }
