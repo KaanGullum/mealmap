@@ -185,4 +185,14 @@ final class RecommendationEngineTests: XCTestCase {
         XCTAssertTrue(results.first?.repeatBoostApplied == true)
         XCTAssertEqual(results.first?.timesPlanned, 2)
     }
+
+    func testPantryInventoryAggregatesExactAndConvertibleUnits() {
+        let snapshot = PantryInventorySnapshot(items: [
+            PantryItem(name: "Pasta", quantity: 1, unit: .kilogram, category: .grains),
+            PantryItem(name: "Pasta", quantity: 500, unit: .gram, category: .grains),
+        ])
+
+        XCTAssertEqual(snapshot.quantity(for: "Pasta", unit: .kilogram), 1.5, accuracy: 0.0001)
+        XCTAssertEqual(snapshot.quantity(for: "Pasta", unit: .gram), 1500, accuracy: 0.0001)
+    }
 }

@@ -13,18 +13,18 @@ struct PantryFormView: View {
 
     var body: some View {
         Form {
-            Section("Ingredient") {
-                TextField("Name", text: $viewModel.name)
-                TextField("Quantity", value: $viewModel.quantity, format: .number)
+            Section(L10n.text("Ingredient")) {
+                TextField(L10n.text("Name"), text: $viewModel.name)
+                TextField(L10n.text("Quantity"), value: $viewModel.quantity, format: .number)
                     .keyboardType(.decimalPad)
 
-                Picker("Unit", selection: $viewModel.unit) {
+                Picker(L10n.text("Unit"), selection: $viewModel.unit) {
                     ForEach(IngredientUnit.allCases) { unit in
                         Text(unit.displayName).tag(unit)
                     }
                 }
 
-                Picker("Category", selection: $viewModel.category) {
+                Picker(L10n.text("Category"), selection: $viewModel.category) {
                     ForEach(PantryCategory.allCases) { category in
                         Label(category.title, systemImage: category.systemImage)
                             .tag(category)
@@ -32,13 +32,13 @@ struct PantryFormView: View {
                 }
             }
 
-            Section("Details") {
-                Toggle("Staple item", isOn: $viewModel.isStaple)
-                Toggle("Has expiration date", isOn: $viewModel.expirationDateEnabled.animation())
+            Section(L10n.text("Details")) {
+                Toggle(L10n.text("Staple item"), isOn: $viewModel.isStaple)
+                Toggle(L10n.text("Has expiration date"), isOn: $viewModel.expirationDateEnabled.animation())
 
                 if viewModel.expirationDateEnabled {
                     DatePicker(
-                        "Expiration Date",
+                        L10n.text("Expiration Date"),
                         selection: $viewModel.expirationDate,
                         displayedComponents: .date
                     )
@@ -49,13 +49,13 @@ struct PantryFormView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button("Cancel") {
+                Button(L10n.text("Cancel")) {
                     dismiss()
                 }
             }
 
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Save") {
+                Button(L10n.text("Save")) {
                     save()
                 }
                 .disabled(viewModel.canSave == false)

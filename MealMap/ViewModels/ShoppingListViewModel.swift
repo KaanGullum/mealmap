@@ -28,13 +28,13 @@ final class ShoppingListViewModel: ObservableObject {
             .sorted { $0.title < $1.title }
     }
 
-    func toggle(_ item: ShoppingListItem, in context: ModelContext) {
+    func toggle(_ item: ShoppingListItem, in context: ModelContext) throws {
         item.isChecked.toggle()
-        try? context.save()
+        try context.save()
     }
 
-    func removeCheckedItems(_ items: [ShoppingListItem], in context: ModelContext) {
+    func removeCheckedItems(_ items: [ShoppingListItem], in context: ModelContext) throws {
         items.filter(\.isChecked).forEach(context.delete)
-        try? context.save()
+        try context.save()
     }
 }

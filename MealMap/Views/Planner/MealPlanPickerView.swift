@@ -13,6 +13,7 @@ struct MealPlanPickerView: View {
     let onClear: () -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @State private var showClearConfirmation = false
     private let metricsService = MealPlanMetricsService()
 
     var body: some View {
@@ -21,16 +22,15 @@ struct MealPlanPickerView: View {
                 if selectedRecipeID != nil {
                     Section {
                         Button(role: .destructive) {
-                            onClear()
-                            dismiss()
+                            showClearConfirmation = true
                         } label: {
-                            Label("Clear Selection", systemImage: "trash")
+                            Label(L10n.text("Clear Selection"), systemImage: "trash")
                         }
                     }
                 }
 
                 if leftoverCandidates.isEmpty == false {
-                    Section("Use leftovers") {
+                    Section(L10n.text("Use leftovers")) {
                         ForEach(leftoverCandidates, id: \.id) { sourceEntry in
                             Button {
                                 onSelectLeftovers(sourceEntry)
@@ -58,14 +58,14 @@ struct MealPlanPickerView: View {
                 }
 
                 if highlightedRecipes.isEmpty == false {
-                    Section("Favorites & repeats") {
+                    Section(L10n.text("Favorites & repeats")) {
                         ForEach(highlightedRecipes, id: \.id) { recipe in
                             recipeButton(for: recipe)
                         }
                     }
                 }
 
-                Section("Recipes") {
+                Section(L10n.text("Recipes")) {
                     ForEach(allRecipes, id: \.id) { recipe in
                         recipeButton(for: recipe)
                     }
@@ -75,11 +75,20 @@ struct MealPlanPickerView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
+                    Button(L10n.text("Done")) {
                         dismiss()
                     }
                 }
             }
+            .alert(L10n.text("Clear Selection"), isPresented: $showClearConfirmation, actions: {
+                Button(L10n.text("Cancel"), role: .cancel) {}
+                Button(L10n.text("Clear"), role: .destructive) {
+                    onClear()
+                    dismiss()
+                }
+            }, message: {
+                Text(L10n.text("This will remove the selected recipe from this meal slot."))
+            })
         }
     }
 

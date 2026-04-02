@@ -16,7 +16,7 @@ struct OnboardingView: View {
                     Text("MealMap")
                         .font(.largeTitle.bold())
 
-                    Text("Plan a week of meals around the ingredients you already have, catch items expiring soon, and keep your shopping list focused.")
+                    Text(L10n.text("Plan a week of meals around the ingredients you already have, catch items expiring soon, and keep your shopping list focused."))
                         .font(.title3)
                         .foregroundStyle(.secondary)
                 }
@@ -40,14 +40,14 @@ struct OnboardingView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 10) {
-                    Label("Runs fully offline with local sample data", systemImage: "checkmark.seal")
-                    Label("Built with SwiftUI + SwiftData", systemImage: "square.stack.3d.up")
-                    Label("Ready for future API integration", systemImage: "bolt.horizontal")
+                    Label(L10n.text("Runs fully offline with local sample data"), systemImage: "checkmark.seal")
+                    Label(L10n.text("Built with SwiftUI + SwiftData"), systemImage: "square.stack.3d.up")
+                    Label(L10n.text("Ready for future API integration"), systemImage: "bolt.horizontal")
                 }
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
-                Button("Start Planning", action: onContinue)
+                Button(L10n.text("Start Planning"), action: onContinue)
                     .buttonStyle(.borderedProminent)
                     .tint(.green)
                     .controlSize(.large)

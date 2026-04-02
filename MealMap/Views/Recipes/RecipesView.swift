@@ -9,6 +9,8 @@ struct RecipesView: View {
     @Query(sort: \MealPlanEntry.date) private var mealPlanEntries: [MealPlanEntry]
     @StateObject private var viewModel: RecipesViewModel
     @State private var showAddRecipe = false
+    @State private var recipeToDelete: Recipe?
+    @State private var errorMessage: String?
     @AppStorage("budgetFriendlyMode") private var budgetFriendlyMode = false
     @AppStorage("showOnlyAvailableRecipes") private var showOnlyAvailableRecipes = false
 
@@ -21,8 +23,8 @@ struct RecipesView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 12) {
-                    Toggle("Budget-friendly ranking", isOn: $budgetFriendlyMode)
-                    Toggle("Can be made with what I already have", isOn: $showOnlyAvailableRecipes)
+                    Toggle(L10n.text("Budget-friendly ranking"), isOn: $budgetFriendlyMode)
+                    Toggle(L10n.text("Can be made with what I already have"), isOn: $showOnlyAvailableRecipes)
                 }
                 .listRowInsets(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
             }
@@ -39,7 +41,7 @@ struct RecipesView: View {
                     }
                 }
             } else {
-                Section("Recipes") {
+                Section(L10n.text("Recipes")) {
                     ForEach(filteredRecommendations) { recommendation in
                         NavigationLink {
                             RecipeDetailView(recipe: recommendation.recipe)
@@ -56,8 +58,8 @@ struct RecipesView: View {
                                 )
                             }
                             .tint(.yellow)
-                            Button("Delete", role: .destructive) {
-                                delete(recommendation.recipe)
+                            Button(L10n.text("Delete"), role: .destructive) {
+                                recipeToDelete = recommendation.recipe
                             }
                         }
                     }
@@ -65,8 +67,8 @@ struct RecipesView: View {
             }
         }
         .listStyle(.insetGrouped)
-        .navigationTitle("Recipes")
-        .searchable(text: $viewModel.searchText, prompt: "Search recipes or tags")
+        .navigationTitle(L10n.text("Recipes"))
+        .searchable(text: $viewModel.searchText, prompt: L10n.text("Search recipes or tags"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -90,40 +92,85 @@ struct RecipesView: View {
                 onlyUsePantryItems: showOnlyAvailableRecipes
             )
         }
+        .alert(L10n.text("Delete Recipe"), isPresented: Binding(
+            get: { recipeToDelete != nil },
+            set: { if $0 == false { recipeToDelete = nil } }
+        ), actions: {
+            Button(L10n.text("Cancel"), role: .cancel) {
+                recipeToDelete = nil
+            }
+            Button(L10n.text("Delete"), role: .destructive) {
+                if let recipe = recipeToDelete {
+                    delete(recipe)
+                }
+                recipeToDelete = nil
+            }
+        }, message: {
+            Text(L10n.text("This recipe and all its planned meals will be removed. This cannot be undone."))
+        })
+        .alert(L10n.text("Error"), isPresented: Binding(
+            get: { errorMessage != nil },
+            set: { if $0 == false { errorMessage = nil } }
+        ), actions: {
+            Button(L10n.text("OK")) { errorMessage = nil }
+        }, message: {
+            Text(errorMessage ?? "")
+        })
     }
 
     private var filteredRecommendations: [RecipeRecommendation] {
         viewModel.filteredRecommendations()
     }
 
-    private var refreshKey: String {
-        let recipesKey = recipes.map { recipe in
-            "\(recipe.id.uuidString)-\(recipe.ingredients.count)-\(recipe.estimatedCost)-\(recipe.defaultServings)-\(recipe.isFavorite)"
+    private var refreshKey: Int {
+        var hasher = Hasher()
+        hasher.combine(recipes.count)
+        hasher.combine(pantryItems.count)
+        hasher.combine(mealPlanEntries.count)
+        for recipe in recipes {
+            hasher.combine(recipe.id)
+            hasher.combine(recipe.estimatedCost)
+            hasher.combine(recipe.isFavorite)
+            hasher.combine(recipe.defaultServings)
+            hasher.combine(recipe.ingredients.count)
         }
-        .joined(separator: "|")
-
-        let pantryKey = pantryItems.map { item in
-            "\(item.id.uuidString)-\(item.quantity)"
+        for item in pantryItems {
+            hasher.combine(item.id)
+            hasher.combine(item.quantity)
         }
-        .joined(separator: "|")
-
-        let mealPlanKey = mealPlanEntries.map { entry in
-            "\(entry.id.uuidString)-\(entry.recipeID.uuidString)-\(entry.servings)-\(entry.leftoversSourceEntryID?.uuidString ?? "none")"
+        for entry in mealPlanEntries {
+            hasher.combine(entry.id)
+            hasher.combine(entry.recipeID)
+            hasher.combine(entry.servings)
         }
-        .joined(separator: "|")
-
-        return [recipesKey, pantryKey, mealPlanKey, "\(budgetFriendlyMode)", "\(showOnlyAvailableRecipes)"]
-            .joined(separator: "#")
+        hasher.combine(budgetFriendlyMode)
+        hasher.combine(showOnlyAvailableRecipes)
+        return hasher.finalize()
     }
 
     private func delete(_ recipe: Recipe) {
-        modelContext.delete(recipe)
-        try? modelContext.save()
+        do {
+            let recipeID = recipe.id
+            for entry in mealPlanEntries where entry.recipeID == recipeID {
+                modelContext.delete(entry)
+            }
+            if let imageName = recipe.imageName {
+                RecipeImageStore.delete(named: imageName)
+            }
+            modelContext.delete(recipe)
+            try modelContext.save()
+        } catch {
+            errorMessage = L10n.text("Unable to delete the recipe right now.")
+        }
     }
 
     private func toggleFavorite(_ recipe: Recipe) {
-        recipe.isFavorite.toggle()
-        try? modelContext.save()
+        do {
+            recipe.isFavorite.toggle()
+            try modelContext.save()
+        } catch {
+            errorMessage = L10n.text("Unable to update favorite status.")
+        }
     }
 }
 
@@ -132,7 +179,9 @@ private struct RecipeListRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .top) {
+            HStack(alignment: .top, spacing: 12) {
+                RecipeThumbnailView(imageName: recommendation.recipe.imageName)
+
                 VStack(alignment: .leading, spacing: 6) {
                     Text(recommendation.recipe.title)
                         .font(.headline)

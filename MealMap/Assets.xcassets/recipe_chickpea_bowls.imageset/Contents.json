@@ -1,0 +1,13 @@
+{
+  "images" : [
+    {
+      "filename" : "recipe_chickpea_bowls.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

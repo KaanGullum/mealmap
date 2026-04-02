@@ -170,4 +170,32 @@ final class ShoppingListGeneratorTests: XCTestCase {
 
         XCTAssertTrue(candidates.isEmpty)
     }
+
+    func testGeneratorCountsConvertibleAndExactPantryUnitsTogether() {
+        let generator = ShoppingListGenerator()
+        let pantry = [
+            PantryItem(name: "Pasta", quantity: 1, unit: .kilogram, category: .grains),
+            PantryItem(name: "Pasta", quantity: 500, unit: .gram, category: .grains),
+        ]
+
+        let pastaRecipe = Recipe(
+            title: "Big Pasta",
+            summary: "Needs one and a half kilograms of pasta.",
+            ingredients: [
+                RecipeIngredient(ingredientName: "Pasta", quantity: 1.5, unit: .kilogram),
+            ],
+            instructions: "Cook pasta.",
+            tags: ["Dinner"],
+            estimatedCost: 8,
+            prepTimeMinutes: 20
+        )
+
+        let results = generator.generate(
+            pantryItems: pantry,
+            plannedEntries: [MealPlanEntry(date: .now, mealType: .dinner, recipeID: pastaRecipe.id)],
+            recipes: [pastaRecipe]
+        )
+
+        XCTAssertTrue(results.isEmpty)
+    }
 }

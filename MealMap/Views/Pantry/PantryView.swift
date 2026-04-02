@@ -8,6 +8,7 @@ struct PantryView: View {
     @StateObject private var viewModel: PantryViewModel
     @State private var showAddForm = false
     @State private var editingItem: PantryItem?
+    @State private var errorMessage: String?
     @AppStorage("lastUsedPantryCategory") private var lastUsedPantryCategoryRawValue = PantryCategory.produce.rawValue
 
     @MainActor
@@ -36,14 +37,14 @@ struct PantryView: View {
             }
 
             if filteredItems.isEmpty == false {
-                Section("Items") {
+                Section(L10n.text("Items")) {
                     ForEach(filteredItems, id: \.id) { item in
                         PantryItemRow(item: item)
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button("Delete", role: .destructive) {
+                                Button(L10n.text("Delete"), role: .destructive) {
                                     delete(item)
                                 }
-                                Button("Edit") {
+                                Button(L10n.text("Edit")) {
                                     editingItem = item
                                 }
                                 .tint(.blue)
@@ -54,8 +55,8 @@ struct PantryView: View {
         }
         .listStyle(.insetGrouped)
         .background(Color(.systemGroupedBackground))
-        .navigationTitle("Pantry")
-        .searchable(text: $viewModel.searchText, prompt: "Search ingredients")
+        .navigationTitle(L10n.text("Pantry"))
+        .searchable(text: $viewModel.searchText, prompt: L10n.text("Search ingredients"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -75,6 +76,14 @@ struct PantryView: View {
                 PantryFormView(item: item)
             }
         }
+        .alert(L10n.text("Error"), isPresented: Binding(
+            get: { errorMessage != nil },
+            set: { if $0 == false { errorMessage = nil } }
+        ), actions: {
+            Button(L10n.text("OK")) { errorMessage = nil }
+        }, message: {
+            Text(errorMessage ?? "")
+        })
     }
 
     private var filteredItems: [PantryItem] {
@@ -112,8 +121,12 @@ struct PantryView: View {
     }
 
     private func delete(_ item: PantryItem) {
-        modelContext.delete(item)
-        try? modelContext.save()
+        do {
+            modelContext.delete(item)
+            try modelContext.save()
+        } catch {
+            errorMessage = L10n.text("Unable to delete the pantry item right now.")
+        }
     }
 }
 

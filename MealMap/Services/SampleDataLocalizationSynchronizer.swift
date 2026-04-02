@@ -91,6 +91,11 @@ struct SampleDataLocalizationSynchronizer {
                 didChange = true
             }
 
+            if recipe.imageName != definition.imageName {
+                recipe.imageName = definition.imageName
+                didChange = true
+            }
+
             didChange = synchronizeRecipeIngredients(recipe.ingredients, definition: definition) || didChange
         }
 

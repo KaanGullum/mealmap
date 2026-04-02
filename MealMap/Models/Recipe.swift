@@ -13,6 +13,7 @@ final class Recipe: Identifiable {
     var prepTimeMinutes: Int
     var defaultServings: Int = 2
     var isFavorite: Bool = false
+    var imageName: String?
     var createdAt: Date
 
     init(
@@ -26,6 +27,7 @@ final class Recipe: Identifiable {
         prepTimeMinutes: Int,
         defaultServings: Int = 2,
         isFavorite: Bool = false,
+        imageName: String? = nil,
         createdAt: Date = .now
     ) {
         self.id = id
@@ -38,6 +40,7 @@ final class Recipe: Identifiable {
         self.prepTimeMinutes = prepTimeMinutes
         self.defaultServings = defaultServings
         self.isFavorite = isFavorite
+        self.imageName = imageName
         self.createdAt = createdAt
     }
 }

@@ -268,3 +268,27 @@
 "Great for toast-style toppings and grain bowls." = "Tost benzeri sunumlar ve tahıl kaseleri için idealdir.";
 "Same canned-bean role in rice bowls and skillets." = "Pirinç kaseleri ve tava yemeklerinde aynı konserve fasulye rolünü üstlenir.";
 "Slightly firmer but still pantry friendly." = "Biraz daha diri yapılıdır ama hâlâ kiler dostudur.";
+
+"Edit Recipe" = "Tarifi Düzenle";
+"Error" = "Hata";
+"Delete Recipe" = "Tarifi Sil";
+"This recipe and all its planned meals will be removed. This cannot be undone." = "Bu tarif ve tüm planlanmış öğünleri kaldırılacak. Bu işlem geri alınamaz.";
+"Unable to delete the recipe right now." = "Tarif şu anda silinemiyor.";
+"Unable to update favorite status." = "Favori durumu güncellenemiyor.";
+"Unable to assign the recipe right now." = "Tarif şu anda atanamıyor.";
+"Unable to assign leftovers right now." = "Artanlar şu anda atanamıyor.";
+"Unable to clear the meal right now." = "Öğün şu anda temizlenemiyor.";
+"Unable to update servings right now." = "Porsiyon sayısı şu anda güncellenemiyor.";
+"Unable to delete the pantry item right now." = "Kiler öğesi şu anda silinemiyor.";
+"Unable to update the item right now." = "Öğe şu anda güncellenemiyor.";
+"Unable to remove checked items right now." = "İşaretli öğeler şu anda kaldırılamıyor.";
+"Clear" = "Temizle";
+"This will remove the selected recipe from this meal slot." = "Seçilen tarif bu öğün diliminden kaldırılacak.";
+
+"Recipe Photo" = "Tarif Fotoğrafı";
+"Add Photo" = "Fotoğraf Ekle";
+"Change Photo" = "Fotoğraf Değiştir";
+"Remove Photo" = "Fotoğrafı Kaldır";
+"Unable to save the recipe right now." = "Tarif şu anda kaydedilemiyor.";
+"Unable to save the recipe photo right now." = "Tarif fotoğrafı şu anda kaydedilemiyor.";
+"Unable to process the selected photo." = "Seçilen fotoğraf şu anda işlenemiyor.";

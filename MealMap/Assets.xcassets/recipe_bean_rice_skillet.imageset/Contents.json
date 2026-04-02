@@ -1,0 +1,13 @@
+{
+  "images" : [
+    {
+      "filename" : "recipe_bean_rice_skillet.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

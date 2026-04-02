@@ -130,9 +130,16 @@ struct PantryInventorySnapshot {
     }
 
     func quantity(for ingredientName: String, unit: IngredientUnit) -> Double {
-        groupedItems[ingredientName.normalizedIngredientName, default: []]
-            .filter { $0.unit == unit }
-            .reduce(0) { $0 + $1.quantity }
+        let items = groupedItems[ingredientName.normalizedIngredientName, default: []]
+        var total = 0.0
+        for item in items {
+            if item.unit == unit {
+                total += item.quantity
+            } else if let factor = Self.conversionFactor(from: item.unit, to: unit) {
+                total += item.quantity * factor
+            }
+        }
+        return total
     }
 
     func hasExpiringMatch(for ingredientName: String, within days: Int) -> Bool {
@@ -147,5 +154,15 @@ struct PantryInventorySnapshot {
 
     func hasAnyMatch(for ingredientName: String) -> Bool {
         groupedItems[ingredientName.normalizedIngredientName, default: []].isEmpty == false
+    }
+
+    private static func conversionFactor(from sourceUnit: IngredientUnit, to targetUnit: IngredientUnit) -> Double? {
+        switch (sourceUnit, targetUnit) {
+        case (.gram, .kilogram): return 0.001
+        case (.kilogram, .gram): return 1000
+        case (.milliliter, .liter): return 0.001
+        case (.liter, .milliliter): return 1000
+        default: return nil
+        }
     }
 }

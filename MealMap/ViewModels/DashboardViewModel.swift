@@ -14,14 +14,10 @@ final class DashboardViewModel: ObservableObject {
 
     init(
         recommendationService: RecipeRecommendationServicing,
-        pantryInsightService: PantryInsightService = PantryInsightService()
+        pantryInsightService: PantryInsightService
     ) {
         self.recommendationService = recommendationService
         self.pantryInsightService = pantryInsightService
-    }
-
-    convenience init() {
-        self.init(recommendationService: LocalRecommendationEngine())
     }
 
     func refresh(

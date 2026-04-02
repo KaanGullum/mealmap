@@ -17,7 +17,7 @@ struct MainTabView: View {
                 DashboardView(selectedTab: $selectedTab)
             }
             .tabItem {
-                Label("Dashboard", systemImage: "house")
+                Label(L10n.text("Dashboard"), systemImage: "house")
             }
             .tag(AppTab.dashboard)
 
@@ -25,7 +25,7 @@ struct MainTabView: View {
                 PantryView()
             }
             .tabItem {
-                Label("Pantry", systemImage: "cabinet")
+                Label(L10n.text("Pantry"), systemImage: "cabinet")
             }
             .tag(AppTab.pantry)
 
@@ -33,7 +33,7 @@ struct MainTabView: View {
                 RecipesView()
             }
             .tabItem {
-                Label("Recipes", systemImage: "fork.knife")
+                Label(L10n.text("Recipes"), systemImage: "fork.knife")
             }
             .tag(AppTab.recipes)
 
@@ -41,7 +41,7 @@ struct MainTabView: View {
                 WeeklyPlannerView()
             }
             .tabItem {
-                Label("Planner", systemImage: "calendar")
+                Label(L10n.text("Planner"), systemImage: "calendar")
             }
             .tag(AppTab.planner)
 
@@ -49,7 +49,7 @@ struct MainTabView: View {
                 ShoppingListView()
             }
             .tabItem {
-                Label("Shopping", systemImage: "cart")
+                Label(L10n.text("Shopping"), systemImage: "cart")
             }
             .tag(AppTab.shoppingList)
         }

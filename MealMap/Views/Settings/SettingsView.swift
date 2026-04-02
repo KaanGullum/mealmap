@@ -16,25 +16,25 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
-            Section("Language") {
-                Picker("App Language", selection: $appLanguagePreferenceRawValue) {
+            Section(L10n.text("Language")) {
+                Picker(L10n.text("App Language"), selection: $appLanguagePreferenceRawValue) {
                     ForEach(AppLanguagePreference.allCases) { option in
                         Text(L10n.text(option.titleKey)).tag(option.rawValue)
                     }
                 }
 
-                Text("Choose whether MealMap follows your iPhone language or always stays in English or Turkish.")
+                Text(L10n.text("Choose whether MealMap follows your iPhone language or always stays in English or Turkish."))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
 
-            Section("Planning Preferences") {
-                Toggle("Enable budget-friendly suggestions", isOn: $budgetFriendlyMode)
-                Toggle("Default to “Can be made with what I already have”", isOn: $showOnlyAvailableRecipes)
+            Section(L10n.text("Planning Preferences")) {
+                Toggle(L10n.text("Enable budget-friendly suggestions"), isOn: $budgetFriendlyMode)
+                Toggle(L10n.text("Default to “Can be made with what I already have”"), isOn: $showOnlyAvailableRecipes)
             }
 
-            Section("Budget Guardrails") {
-                Toggle("Enable weekly budget cap", isOn: $weeklyBudgetLimitEnabled)
+            Section(L10n.text("Budget Guardrails")) {
+                Toggle(L10n.text("Enable weekly budget cap"), isOn: $weeklyBudgetLimitEnabled)
 
                 if weeklyBudgetLimitEnabled {
                     Stepper(value: $weeklyBudgetLimit, in: 100...5000, step: 50) {
@@ -46,14 +46,14 @@ struct SettingsView: View {
                 }
             }
 
-            Section("Current Mode") {
-                Label("Local recommendation engine", systemImage: "internaldrive")
+            Section(L10n.text("Current Mode")) {
+                Label(L10n.text("Local recommendation engine"), systemImage: "internaldrive")
                 Text(viewModel.localModeDescription)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
         }
-        .navigationTitle("Settings")
+        .navigationTitle(L10n.text("Settings"))
         .navigationBarTitleDisplayMode(.inline)
     }
 }

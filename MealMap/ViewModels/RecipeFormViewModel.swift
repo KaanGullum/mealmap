@@ -2,6 +2,17 @@ import Combine
 import Foundation
 import SwiftData
 
+enum RecipeFormSaveError: LocalizedError {
+    case photoSaveFailed
+
+    var errorDescription: String? {
+        switch self {
+        case .photoSaveFailed:
+            return L10n.text("Unable to save the recipe photo right now.")
+        }
+    }
+}
+
 struct EditableRecipeIngredient: Identifiable {
     let id: UUID
     var ingredientName: String
@@ -35,11 +46,56 @@ final class RecipeFormViewModel: ObservableObject {
         EditableRecipeIngredient(),
         EditableRecipeIngredient()
     ]
+    @Published var selectedImageData: Data?
+    @Published var existingImageName: String?
+    @Published var imageRemoved = false
+
+    private let existingRecipe: Recipe?
+
+    init(recipe: Recipe? = nil) {
+        self.existingRecipe = recipe
+
+        if let recipe {
+            self.title = recipe.title
+            self.summary = recipe.summary
+            self.instructions = recipe.instructions
+            self.tagsText = recipe.tags.joined(separator: ", ")
+            self.estimatedCost = recipe.estimatedCost
+            self.prepTimeMinutes = recipe.prepTimeMinutes
+            self.defaultServings = recipe.defaultServings
+            self.isFavorite = recipe.isFavorite
+            self.existingImageName = recipe.imageName
+            self.ingredientDrafts = recipe.ingredients.map { ingredient in
+                EditableRecipeIngredient(
+                    ingredientName: ingredient.ingredientName,
+                    quantity: ingredient.quantity,
+                    unit: ingredient.unit
+                )
+            }
+            if self.ingredientDrafts.isEmpty {
+                self.ingredientDrafts = [EditableRecipeIngredient()]
+            }
+        }
+    }
+
+    var formTitle: String {
+        existingRecipe == nil ? L10n.text("Add Recipe") : L10n.text("Edit Recipe")
+    }
 
     var canSave: Bool {
         title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
             && instructions.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
             && ingredientDrafts.contains(where: { $0.ingredientName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false })
+    }
+
+    var hasImage: Bool {
+        if imageRemoved { return false }
+        return selectedImageData != nil || existingImageName != nil
+    }
+
+    func removeImage() {
+        selectedImageData = nil
+        imageRemoved = true
     }
 
     func addIngredientDraft() {
@@ -71,19 +127,89 @@ final class RecipeFormViewModel: ObservableObject {
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { $0.isEmpty == false }
 
-        let recipe = Recipe(
-            title: title.trimmingCharacters(in: .whitespacesAndNewlines),
-            summary: summary.trimmingCharacters(in: .whitespacesAndNewlines),
-            ingredients: trimmedIngredients,
-            instructions: instructions.trimmingCharacters(in: .whitespacesAndNewlines),
-            tags: tags,
-            estimatedCost: estimatedCost,
-            prepTimeMinutes: prepTimeMinutes,
-            defaultServings: max(defaultServings, 1),
-            isFavorite: isFavorite
-        )
+        if let existingRecipe {
+            let previousImageName = existingRecipe.imageName
 
-        context.insert(recipe)
-        try context.save()
+            existingRecipe.title = title.trimmingCharacters(in: .whitespacesAndNewlines)
+            existingRecipe.summary = summary.trimmingCharacters(in: .whitespacesAndNewlines)
+            existingRecipe.instructions = instructions.trimmingCharacters(in: .whitespacesAndNewlines)
+            existingRecipe.tags = tags
+            existingRecipe.estimatedCost = estimatedCost
+            existingRecipe.prepTimeMinutes = prepTimeMinutes
+            existingRecipe.defaultServings = max(defaultServings, 1)
+            existingRecipe.isFavorite = isFavorite
+
+            for oldIngredient in existingRecipe.ingredients {
+                context.delete(oldIngredient)
+            }
+            existingRecipe.ingredients = trimmedIngredients
+
+            var replacementImageName: String?
+            if let imageData = selectedImageData {
+                do {
+                    replacementImageName = try RecipeImageStore.save(imageData: imageData, for: existingRecipe.id)
+                } catch {
+                    throw RecipeFormSaveError.photoSaveFailed
+                }
+            } else if imageRemoved {
+                replacementImageName = nil
+            }
+
+            if selectedImageData != nil || imageRemoved {
+                existingRecipe.imageName = replacementImageName
+            }
+
+            do {
+                try context.save()
+            } catch {
+                existingRecipe.imageName = previousImageName
+                if let replacementImageName, replacementImageName != previousImageName {
+                    RecipeImageStore.delete(named: replacementImageName)
+                }
+                throw error
+            }
+
+            if imageRemoved, let previousImageName {
+                RecipeImageStore.delete(named: previousImageName)
+            } else if let replacementImageName, let previousImageName, replacementImageName != previousImageName {
+                RecipeImageStore.delete(named: previousImageName)
+            }
+        } else {
+            let recipeID = UUID()
+            var savedImageName: String?
+
+            if let imageData = selectedImageData {
+                do {
+                    savedImageName = try RecipeImageStore.save(imageData: imageData, for: recipeID)
+                } catch {
+                    throw RecipeFormSaveError.photoSaveFailed
+                }
+            }
+
+            let recipe = Recipe(
+                id: recipeID,
+                title: title.trimmingCharacters(in: .whitespacesAndNewlines),
+                summary: summary.trimmingCharacters(in: .whitespacesAndNewlines),
+                ingredients: trimmedIngredients,
+                instructions: instructions.trimmingCharacters(in: .whitespacesAndNewlines),
+                tags: tags,
+                estimatedCost: estimatedCost,
+                prepTimeMinutes: prepTimeMinutes,
+                defaultServings: max(defaultServings, 1),
+                isFavorite: isFavorite,
+                imageName: savedImageName
+            )
+            context.insert(recipe)
+
+            do {
+                try context.save()
+            } catch {
+                if let savedImageName {
+                    RecipeImageStore.delete(named: savedImageName)
+                }
+                context.delete(recipe)
+                throw error
+            }
+        }
     }
 }

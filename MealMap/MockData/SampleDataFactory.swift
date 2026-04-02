@@ -44,6 +44,7 @@ struct SampleRecipeDefinition {
     let prepTimeMinutes: Int
     let defaultServings: Int
     let isFavorite: Bool
+    let imageName: String?
 }
 
 struct SampleMealPlanEntryDefinition {
@@ -93,7 +94,8 @@ enum SampleDataFactory {
             estimatedCost: 6.50,
             prepTimeMinutes: 20,
             defaultServings: 4,
-            isFavorite: true
+            isFavorite: true,
+            imageName: "recipe_spinach_pasta"
         ),
         SampleRecipeDefinition(
             id: sampleID("5EED1000-0000-0000-0000-000000000002"),
@@ -115,7 +117,8 @@ enum SampleDataFactory {
             estimatedCost: 5.25,
             prepTimeMinutes: 25,
             defaultServings: 3,
-            isFavorite: true
+            isFavorite: true,
+            imageName: "recipe_chickpea_bowls"
         ),
         SampleRecipeDefinition(
             id: sampleID("5EED1000-0000-0000-0000-000000000003"),
@@ -137,7 +140,8 @@ enum SampleDataFactory {
             estimatedCost: 4.75,
             prepTimeMinutes: 18,
             defaultServings: 2,
-            isFavorite: false
+            isFavorite: false,
+            imageName: "recipe_veggie_fried_rice"
         ),
         SampleRecipeDefinition(
             id: sampleID("5EED1000-0000-0000-0000-000000000004"),
@@ -158,7 +162,8 @@ enum SampleDataFactory {
             estimatedCost: 3.90,
             prepTimeMinutes: 15,
             defaultServings: 2,
-            isFavorite: false
+            isFavorite: false,
+            imageName: "recipe_tomato_egg_toast"
         ),
         SampleRecipeDefinition(
             id: sampleID("5EED1000-0000-0000-0000-000000000005"),
@@ -180,7 +185,8 @@ enum SampleDataFactory {
             estimatedCost: 5.10,
             prepTimeMinutes: 22,
             defaultServings: 4,
-            isFavorite: true
+            isFavorite: true,
+            imageName: "recipe_bean_rice_skillet"
         ),
         SampleRecipeDefinition(
             id: sampleID("5EED1000-0000-0000-0000-000000000006"),
@@ -199,7 +205,8 @@ enum SampleDataFactory {
             estimatedCost: 4.40,
             prepTimeMinutes: 5,
             defaultServings: 2,
-            isFavorite: false
+            isFavorite: false,
+            imageName: "recipe_yogurt_parfait"
         ),
     ]
 
@@ -321,7 +328,8 @@ enum SampleDataFactory {
                 estimatedCost: definition.estimatedCost,
                 prepTimeMinutes: definition.prepTimeMinutes,
                 defaultServings: definition.defaultServings,
-                isFavorite: definition.isFavorite
+                isFavorite: definition.isFavorite,
+                imageName: definition.imageName
             )
         }
     }

@@ -11,21 +11,27 @@ struct WeeklyPlannerView: View {
     @StateObject private var viewModel: PlannerViewModel
     @State private var selectionContext: PlannerSelectionContext?
     @State private var shoppingListMessage: String?
+    @State private var errorMessage: String?
     @AppStorage("weeklyBudgetLimitEnabled") private var weeklyBudgetLimitEnabled = false
     @AppStorage("weeklyBudgetLimit") private var weeklyBudgetLimit = 700.0
 
     @MainActor
     init() {
-        _viewModel = StateObject(wrappedValue: PlannerViewModel())
+        _viewModel = StateObject(
+            wrappedValue: PlannerViewModel(
+                shoppingListGenerator: ShoppingListGenerator(),
+                metricsService: MealPlanMetricsService()
+            )
+        )
     }
 
     var body: some View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("Build your week")
+                    Text(L10n.text("Build your week"))
                         .font(.headline)
-                    Text("Pick recipes for each meal slot, then generate a shopping list for anything still missing.")
+                    Text(L10n.text("Pick recipes for each meal slot, then generate a shopping list for anything still missing."))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
 
@@ -89,7 +95,7 @@ struct WeeklyPlannerView: View {
                 Button {
                     generateShoppingList()
                 } label: {
-                    Label("Generate Shopping List", systemImage: "cart.badge.plus")
+                    Label(L10n.text("Generate Shopping List"), systemImage: "cart.badge.plus")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
@@ -97,7 +103,7 @@ struct WeeklyPlannerView: View {
             }
         }
         .listStyle(.insetGrouped)
-        .navigationTitle("Weekly Planner")
+        .navigationTitle(L10n.text("Weekly Planner"))
         .sheet(item: $selectionContext) { context in
             let entry = viewModel.entry(for: context.date, mealType: context.mealType, entries: mealPlanEntries)
 
@@ -110,35 +116,17 @@ struct WeeklyPlannerView: View {
                 selectedRecipeID: entry?.recipeID,
                 selectedLeftoverSourceEntryID: entry?.leftoversSourceEntryID,
                 onSelectRecipe: { recipe in
-                    try? viewModel.assign(
-                        recipe: recipe,
-                        for: context.date,
-                        mealType: context.mealType,
-                        existingEntries: mealPlanEntries,
-                        in: modelContext
-                    )
+                    assignRecipe(recipe, for: context)
                 },
                 onSelectLeftovers: { sourceEntry in
-                    try? viewModel.assignLeftovers(
-                        from: sourceEntry,
-                        for: context.date,
-                        mealType: context.mealType,
-                        recipes: recipes,
-                        existingEntries: mealPlanEntries,
-                        in: modelContext
-                    )
+                    assignLeftovers(sourceEntry, for: context)
                 },
                 onClear: {
-                    try? viewModel.clearMeal(
-                        for: context.date,
-                        mealType: context.mealType,
-                        existingEntries: mealPlanEntries,
-                        in: modelContext
-                    )
+                    clearMeal(for: context)
                 }
             )
         }
-        .alert("Shopping List Updated", isPresented: Binding(
+        .alert(L10n.text("Shopping List Updated"), isPresented: Binding(
             get: { shoppingListMessage != nil },
             set: { isPresented in
                 if isPresented == false {
@@ -146,11 +134,19 @@ struct WeeklyPlannerView: View {
                 }
             }
         ), actions: {
-            Button("OK") {
+            Button(L10n.text("OK")) {
                 shoppingListMessage = nil
             }
         }, message: {
             Text(shoppingListMessage ?? "")
+        })
+        .alert(L10n.text("Error"), isPresented: Binding(
+            get: { errorMessage != nil },
+            set: { if $0 == false { errorMessage = nil } }
+        ), actions: {
+            Button(L10n.text("OK")) { errorMessage = nil }
+        }, message: {
+            Text(errorMessage ?? "")
         })
     }
 
@@ -188,7 +184,7 @@ struct WeeklyPlannerView: View {
                             }
                         }
                     } else {
-                        Text("Choose recipe")
+                        Text(L10n.text("Choose recipe"))
                             .foregroundStyle(.secondary)
                     }
                 }
@@ -224,11 +220,7 @@ struct WeeklyPlannerView: View {
 
                 HStack(spacing: 12) {
                     Button {
-                        try? viewModel.updateServings(
-                            for: entry,
-                            servings: max(entry.servings - 1, 1),
-                            in: modelContext
-                        )
+                        updateServings(for: entry, delta: -1)
                     } label: {
                         Image(systemName: "minus.circle.fill")
                             .foregroundStyle(.green)
@@ -239,11 +231,7 @@ struct WeeklyPlannerView: View {
                         .font(.caption.weight(.medium))
 
                     Button {
-                        try? viewModel.updateServings(
-                            for: entry,
-                            servings: min(entry.servings + 1, 12),
-                            in: modelContext
-                        )
+                        updateServings(for: entry, delta: 1)
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .foregroundStyle(.green)
@@ -253,6 +241,61 @@ struct WeeklyPlannerView: View {
             }
         }
         .padding(.vertical, 6)
+    }
+
+    private func assignRecipe(_ recipe: Recipe, for context: PlannerSelectionContext) {
+        do {
+            try viewModel.assign(
+                recipe: recipe,
+                for: context.date,
+                mealType: context.mealType,
+                existingEntries: mealPlanEntries,
+                in: modelContext
+            )
+        } catch {
+            errorMessage = L10n.text("Unable to assign the recipe right now.")
+        }
+    }
+
+    private func assignLeftovers(_ sourceEntry: MealPlanEntry, for context: PlannerSelectionContext) {
+        do {
+            try viewModel.assignLeftovers(
+                from: sourceEntry,
+                for: context.date,
+                mealType: context.mealType,
+                recipes: recipes,
+                existingEntries: mealPlanEntries,
+                in: modelContext
+            )
+        } catch {
+            errorMessage = L10n.text("Unable to assign leftovers right now.")
+        }
+    }
+
+    private func clearMeal(for context: PlannerSelectionContext) {
+        do {
+            try viewModel.clearMeal(
+                for: context.date,
+                mealType: context.mealType,
+                existingEntries: mealPlanEntries,
+                in: modelContext
+            )
+        } catch {
+            errorMessage = L10n.text("Unable to clear the meal right now.")
+        }
+    }
+
+    private func updateServings(for entry: MealPlanEntry, delta: Int) {
+        do {
+            let newServings = delta > 0 ? min(entry.servings + 1, 12) : max(entry.servings - 1, 1)
+            try viewModel.updateServings(
+                for: entry,
+                servings: newServings,
+                in: modelContext
+            )
+        } catch {
+            errorMessage = L10n.text("Unable to update servings right now.")
+        }
     }
 
     private func generateShoppingList() {

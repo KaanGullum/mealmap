@@ -18,7 +18,12 @@ struct DashboardView: View {
     @MainActor
     init(selectedTab: Binding<AppTab>) {
         self._selectedTab = selectedTab
-        _viewModel = StateObject(wrappedValue: DashboardViewModel())
+        _viewModel = StateObject(
+            wrappedValue: DashboardViewModel(
+                recommendationService: LocalRecommendationEngine(),
+                pantryInsightService: PantryInsightService()
+            )
+        )
     }
 
     var body: some View {
@@ -59,24 +64,34 @@ struct DashboardView: View {
         }
     }
 
-    private var refreshKey: String {
-        let pantryKey = pantryItems.map { item in
-            "\(item.id.uuidString)-\(item.quantity)-\(item.expirationDate?.timeIntervalSince1970 ?? 0)"
+    private var refreshKey: Int {
+        var hasher = Hasher()
+        hasher.combine(pantryItems.count)
+        hasher.combine(recipes.count)
+        hasher.combine(mealPlanEntries.count)
+        for item in pantryItems {
+            hasher.combine(item.id)
+            hasher.combine(item.quantity)
+            hasher.combine(item.expirationDate)
         }
-        .joined(separator: "|")
-
-        let recipeKey = recipes.map { recipe in
-            "\(recipe.id.uuidString)-\(recipe.ingredients.count)-\(recipe.estimatedCost)-\(recipe.defaultServings)-\(recipe.isFavorite)"
+        for recipe in recipes {
+            hasher.combine(recipe.id)
+            hasher.combine(recipe.estimatedCost)
+            hasher.combine(recipe.isFavorite)
+            hasher.combine(recipe.defaultServings)
+            hasher.combine(recipe.ingredients.count)
         }
-        .joined(separator: "|")
-
-        let mealPlanKey = mealPlanEntries.map { entry in
-            "\(entry.id.uuidString)-\(entry.date.timeIntervalSince1970)-\(entry.recipeID.uuidString)-\(entry.servings)-\(entry.leftoversSourceEntryID?.uuidString ?? "none")"
+        for entry in mealPlanEntries {
+            hasher.combine(entry.id)
+            hasher.combine(entry.recipeID)
+            hasher.combine(entry.servings)
+            hasher.combine(entry.leftoversSourceEntryID)
         }
-        .joined(separator: "|")
-
-        return [pantryKey, recipeKey, mealPlanKey, "\(budgetFriendlyMode)", "\(showOnlyAvailableRecipes)", "\(weeklyBudgetLimitEnabled)", "\(weeklyBudgetLimit)"]
-            .joined(separator: "#")
+        hasher.combine(budgetFriendlyMode)
+        hasher.combine(showOnlyAvailableRecipes)
+        hasher.combine(weeklyBudgetLimitEnabled)
+        hasher.combine(weeklyBudgetLimit)
+        return hasher.finalize()
     }
 
     private var dashboardHero: some View {
@@ -88,11 +103,11 @@ struct DashboardView: View {
         )
 
         return VStack(alignment: .leading, spacing: 16) {
-            Text("Plan smarter with the pantry you already have.")
+            Text(L10n.text("Plan smarter with the pantry you already have."))
                 .font(.title2.bold())
                 .foregroundStyle(.white)
 
-            Text("See what needs to be used soon, discover low-cost meals, and build the week without overbuying.")
+            Text(L10n.text("See what needs to be used soon, discover low-cost meals, and build the week without overbuying."))
                 .font(.subheadline)
                 .foregroundStyle(.white.opacity(0.9))
 
@@ -144,11 +159,11 @@ struct DashboardView: View {
     private var expiringSoonSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Expiring Soon")
+                Text(L10n.text("Expiring Soon"))
                     .font(.headline)
                 Spacer()
                 if viewModel.expiringSoonItems.isEmpty == false {
-                    Text("Use these first")
+                    Text(L10n.text("Use these first"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -193,11 +208,11 @@ struct DashboardView: View {
     private var lowStockSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Low Stock")
+                Text(L10n.text("Low Stock"))
                     .font(.headline)
                 Spacer()
                 if viewModel.lowStockItems.isEmpty == false {
-                    Text("Restock soon")
+                    Text(L10n.text("Restock soon"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -240,7 +255,7 @@ struct DashboardView: View {
 
     private var quickActionsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Quick Actions")
+            Text(L10n.text("Quick Actions"))
                 .font(.headline)
 
             HStack(spacing: 12) {
@@ -264,9 +279,9 @@ struct DashboardView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Suggested Meals")
+                    Text(L10n.text("Suggested Meals"))
                         .font(.headline)
-                    Text("Ranked by pantry match, expiring ingredients, and budget preferences.")
+                    Text(L10n.text("Ranked by pantry match, expiring ingredients, and budget preferences."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -274,9 +289,9 @@ struct DashboardView: View {
                 Spacer()
 
                 VStack(alignment: .trailing, spacing: 6) {
-                    Toggle("Budget", isOn: $budgetFriendlyMode)
+                    Toggle(L10n.text("Budget"), isOn: $budgetFriendlyMode)
                         .toggleStyle(.switch)
-                    Toggle("Use what I have", isOn: $showOnlyAvailableRecipes)
+                    Toggle(L10n.text("Use what I have"), isOn: $showOnlyAvailableRecipes)
                         .toggleStyle(.switch)
                 }
                 .font(.caption)
@@ -329,7 +344,9 @@ private struct SuggestedMealCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .top) {
+            HStack(alignment: .top, spacing: 12) {
+                RecipeThumbnailView(imageName: recommendation.recipe.imageName)
+
                 VStack(alignment: .leading, spacing: 6) {
                     Text(recommendation.recipe.title)
                         .font(.headline)

@@ -7,6 +7,8 @@ struct RecipeDetailView: View {
     @Query(sort: \PantryItem.name) private var pantryItems: [PantryItem]
     @Query(sort: \MealPlanEntry.date) private var mealPlanEntries: [MealPlanEntry]
     private let substitutionService = IngredientSubstitutionService()
+    @State private var showEditForm = false
+    @State private var errorMessage: String?
 
     init(recipe: Recipe) {
         self.recipe = recipe
@@ -25,6 +27,9 @@ struct RecipeDetailView: View {
 
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
+                RecipeImageView(imageName: recipe.imageName, height: 220, cornerRadius: 20)
+                    .frame(maxWidth: .infinity)
+
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(alignment: .top) {
                         Text(recipe.title)
@@ -68,7 +73,7 @@ struct RecipeDetailView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Ingredients")
+                    Text(L10n.text("Ingredients"))
                         .font(.headline)
 
                     ForEach(recipe.ingredients, id: \.id) { ingredient in
@@ -102,7 +107,7 @@ struct RecipeDetailView: View {
 
                 if substitutionGuidance.isEmpty == false {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Smart swaps")
+                        Text(L10n.text("Smart swaps"))
                             .font(.headline)
 
                         ForEach(substitutionGuidance) { guidance in
@@ -132,7 +137,7 @@ struct RecipeDetailView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Instructions")
+                    Text(L10n.text("Instructions"))
                         .font(.headline)
 
                     ForEach(Array(recipe.instructions.split(whereSeparator: \.isNewline).enumerated()), id: \.offset) { index, step in
@@ -156,14 +161,43 @@ struct RecipeDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    recipe.isFavorite.toggle()
-                    try? modelContext.save()
-                } label: {
-                    Image(systemName: recipe.isFavorite ? "star.fill" : "star")
-                        .foregroundStyle(recipe.isFavorite ? .yellow : .primary)
+                HStack(spacing: 12) {
+                    Button {
+                        showEditForm = true
+                    } label: {
+                        Image(systemName: "pencil")
+                    }
+
+                    Button {
+                        toggleFavorite()
+                    } label: {
+                        Image(systemName: recipe.isFavorite ? "star.fill" : "star")
+                            .foregroundStyle(recipe.isFavorite ? .yellow : .primary)
+                    }
                 }
             }
+        }
+        .sheet(isPresented: $showEditForm) {
+            NavigationStack {
+                RecipeFormView(recipe: recipe)
+            }
+        }
+        .alert(L10n.text("Error"), isPresented: Binding(
+            get: { errorMessage != nil },
+            set: { if $0 == false { errorMessage = nil } }
+        ), actions: {
+            Button(L10n.text("OK")) { errorMessage = nil }
+        }, message: {
+            Text(errorMessage ?? "")
+        })
+    }
+
+    private func toggleFavorite() {
+        do {
+            recipe.isFavorite.toggle()
+            try modelContext.save()
+        } catch {
+            errorMessage = L10n.text("Unable to update favorite status.")
         }
     }
 }

@@ -18,14 +18,10 @@ final class PlannerViewModel: ObservableObject {
 
     init(
         shoppingListGenerator: ShoppingListGenerating,
-        metricsService: MealPlanMetricsService = MealPlanMetricsService()
+        metricsService: MealPlanMetricsService
     ) {
         self.shoppingListGenerator = shoppingListGenerator
         self.metricsService = metricsService
-    }
-
-    convenience init() {
-        self.init(shoppingListGenerator: ShoppingListGenerator())
     }
 
     var weekDates: [Date] {
