@@ -1,17 +1,21 @@
 import SwiftData
 import SwiftUI
 
+@MainActor
 struct RecipesView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Recipe.title) private var recipes: [Recipe]
     @Query(sort: \PantryItem.name) private var pantryItems: [PantryItem]
     @Query(sort: \MealPlanEntry.date) private var mealPlanEntries: [MealPlanEntry]
-    @StateObject private var viewModel = RecipesViewModel()
+    @StateObject private var viewModel: RecipesViewModel
     @State private var showAddRecipe = false
     @AppStorage("budgetFriendlyMode") private var budgetFriendlyMode = false
     @AppStorage("showOnlyAvailableRecipes") private var showOnlyAvailableRecipes = false
 
-    init() {}
+    @MainActor
+    init() {
+        _viewModel = StateObject(wrappedValue: RecipesViewModel())
+    }
 
     var body: some View {
         List {

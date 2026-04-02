@@ -1,12 +1,18 @@
 import SwiftUI
 
+@MainActor
 struct SettingsView: View {
-    @StateObject private var viewModel = SettingsViewModel()
+    @StateObject private var viewModel: SettingsViewModel
     @AppStorage("budgetFriendlyMode") private var budgetFriendlyMode = false
     @AppStorage("showOnlyAvailableRecipes") private var showOnlyAvailableRecipes = false
     @AppStorage("weeklyBudgetLimitEnabled") private var weeklyBudgetLimitEnabled = false
     @AppStorage("weeklyBudgetLimit") private var weeklyBudgetLimit = 700.0
     @AppStorage(L10n.appLanguagePreferenceKey) private var appLanguagePreferenceRawValue = AppLanguagePreference.system.rawValue
+
+    @MainActor
+    init() {
+        _viewModel = StateObject(wrappedValue: SettingsViewModel())
+    }
 
     var body: some View {
         Form {
@@ -45,12 +51,6 @@ struct SettingsView: View {
                 Text(viewModel.localModeDescription)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-            }
-
-            Section("Future API Integration") {
-                ForEach(viewModel.roadmapItems, id: \.self) { item in
-                    Label(item, systemImage: "circle.dotted")
-                }
             }
         }
         .navigationTitle("Settings")

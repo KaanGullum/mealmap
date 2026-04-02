@@ -121,10 +121,3 @@ private struct IngredientSubstitutionEntry {
     let nameKey: String
     let detailKey: String
 }
-
-private extension IngredientSubstitutionEntry {
-    init(nameKey: String, detailKey: String) {
-        self.nameKey = nameKey
-        self.detailKey = detailKey
-    }
-}

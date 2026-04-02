@@ -1,15 +1,19 @@
 import SwiftData
 import SwiftUI
 
+@MainActor
 struct PantryView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \PantryItem.name) private var pantryItems: [PantryItem]
-    @StateObject private var viewModel = PantryViewModel()
+    @StateObject private var viewModel: PantryViewModel
     @State private var showAddForm = false
     @State private var editingItem: PantryItem?
     @AppStorage("lastUsedPantryCategory") private var lastUsedPantryCategoryRawValue = PantryCategory.produce.rawValue
 
-    init() {}
+    @MainActor
+    init() {
+        _viewModel = StateObject(wrappedValue: PantryViewModel())
+    }
 
     var body: some View {
         List {

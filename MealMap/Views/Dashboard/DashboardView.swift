@@ -1,12 +1,13 @@
 import SwiftData
 import SwiftUI
 
+@MainActor
 struct DashboardView: View {
     @Binding var selectedTab: AppTab
     @Query(sort: \PantryItem.name) private var pantryItems: [PantryItem]
     @Query(sort: \Recipe.title) private var recipes: [Recipe]
     @Query(sort: \MealPlanEntry.date) private var mealPlanEntries: [MealPlanEntry]
-    @StateObject private var viewModel = DashboardViewModel()
+    @StateObject private var viewModel: DashboardViewModel
     @State private var showSettings = false
     @AppStorage("budgetFriendlyMode") private var budgetFriendlyMode = false
     @AppStorage("showOnlyAvailableRecipes") private var showOnlyAvailableRecipes = false
@@ -14,8 +15,10 @@ struct DashboardView: View {
     @AppStorage("weeklyBudgetLimit") private var weeklyBudgetLimit = 700.0
     private let metricsService = MealPlanMetricsService()
 
+    @MainActor
     init(selectedTab: Binding<AppTab>) {
         self._selectedTab = selectedTab
+        _viewModel = StateObject(wrappedValue: DashboardViewModel())
     }
 
     var body: some View {
@@ -84,7 +87,7 @@ struct DashboardView: View {
             recipes: recipes
         )
 
-        VStack(alignment: .leading, spacing: 16) {
+        return VStack(alignment: .leading, spacing: 16) {
             Text("Plan smarter with the pantry you already have.")
                 .font(.title2.bold())
                 .foregroundStyle(.white)
@@ -119,8 +122,8 @@ struct DashboardView: View {
             if weeklyBudgetLimitEnabled {
                 Label(
                     remainingBudget >= 0
-                        ? L10n.dashboardBudgetStatus(weeklyCost.currencyText, remainingBudget.currencyText)
-                        : L10n.dashboardBudgetOverStatus(weeklyCost.currencyText, abs(remainingBudget).currencyText),
+                        ? L10n.dashboardBudgetStatus(weeklyCost.currencyText, remainingText: remainingBudget.currencyText)
+                        : L10n.dashboardBudgetOverStatus(weeklyCost.currencyText, overAmountText: abs(remainingBudget).currencyText),
                     systemImage: remainingBudget >= 0 ? "wallet.pass.fill" : "exclamationmark.triangle.fill"
                 )
                 .font(.caption.weight(.medium))

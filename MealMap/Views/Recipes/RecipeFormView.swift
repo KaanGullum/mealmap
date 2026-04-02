@@ -1,9 +1,16 @@
+import SwiftData
 import SwiftUI
 
+@MainActor
 struct RecipeFormView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
-    @StateObject private var viewModel = RecipeFormViewModel()
+    @StateObject private var viewModel: RecipeFormViewModel
+
+    @MainActor
+    init() {
+        _viewModel = StateObject(wrappedValue: RecipeFormViewModel())
+    }
 
     var body: some View {
         Form {

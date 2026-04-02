@@ -1,13 +1,17 @@
 import SwiftData
 import SwiftUI
 
+@MainActor
 struct ShoppingListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \ShoppingListItem.name) private var shoppingListItems: [ShoppingListItem]
     @Query(sort: \PantryItem.name) private var pantryItems: [PantryItem]
-    @StateObject private var viewModel = ShoppingListViewModel()
+    @StateObject private var viewModel: ShoppingListViewModel
 
-    init() {}
+    @MainActor
+    init() {
+        _viewModel = StateObject(wrappedValue: ShoppingListViewModel())
+    }
 
     var body: some View {
         List {

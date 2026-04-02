@@ -1,19 +1,23 @@
 import SwiftData
 import SwiftUI
 
+@MainActor
 struct WeeklyPlannerView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \MealPlanEntry.date) private var mealPlanEntries: [MealPlanEntry]
     @Query(sort: \Recipe.title) private var recipes: [Recipe]
     @Query(sort: \PantryItem.name) private var pantryItems: [PantryItem]
     @Query(sort: \ShoppingListItem.name) private var shoppingListItems: [ShoppingListItem]
-    @StateObject private var viewModel = PlannerViewModel()
+    @StateObject private var viewModel: PlannerViewModel
     @State private var selectionContext: PlannerSelectionContext?
     @State private var shoppingListMessage: String?
     @AppStorage("weeklyBudgetLimitEnabled") private var weeklyBudgetLimitEnabled = false
     @AppStorage("weeklyBudgetLimit") private var weeklyBudgetLimit = 700.0
 
-    init() {}
+    @MainActor
+    init() {
+        _viewModel = StateObject(wrappedValue: PlannerViewModel())
+    }
 
     var body: some View {
         List {
